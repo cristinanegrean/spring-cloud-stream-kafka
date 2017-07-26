@@ -1,7 +1,7 @@
 ## Fancy Dress Worker Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates.
 
 
-![Fancy Dress Service Architecture](doc/architecture-overview.png)
+![Architecture](architecture_overview.png)
 
 As you note in the above architecture diagram, there is a pin pointing that the `Fancy Dress Worker` Service is scope of this [GitHub repo](https://github.com/cristinanegrean/spring-cloud-stream-kafka)
 
