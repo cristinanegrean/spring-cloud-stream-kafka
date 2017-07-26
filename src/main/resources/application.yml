@@ -1,0 +1,52 @@
+spring:
+  profiles:
+    active: development
+server:
+  port: 9000
+---
+spring:
+  profiles: development
+  cloud:
+    stream:
+      bindings:
+        output:
+          destination: dresses
+          group: dresses-group
+          contentType: 'application/json'
+        input:
+          destination: dresses
+          group: dresses-group
+          contentType: 'application/json'
+          consumer:
+            durableSubscription: true
+---
+spring:
+  profiles: test
+logging:
+  level:
+    org:
+      apache:
+        zookeeper:
+          ZooKeeper: error
+    org.apache.kafka.clients.producer.ProducerConfig: error
+---
+spring:
+  profiles: docker
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: ${DOCKER_IP:127.0.0.1}
+          zk-nodes: ${DOCKER_IP:127.0.0.1}
+      bindings:
+        output:
+          destination: dresses
+          group: dresses-group
+          contentType: 'application/json'
+        input:
+          destination: dresses
+          group: dresses-group
+          contentType: 'application/json'
+          consumer:
+            durableSubscription: true
+            concurrency: 20

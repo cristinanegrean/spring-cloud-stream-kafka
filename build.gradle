@@ -1,39 +1,119 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.0.RELEASE'
+		springBootVersion = '1.5.4.RELEASE'
 	}
 	repositories {
 		mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1") //Send coverage data to coveralls.io
+        classpath('se.transmode.gradle:gradle-docker:1.2') //Build a Docker Image with Gradle
 	}
 }
 
+
+//Docker image name (or tag) is set up from the jar file properties: cristinatech/spring-cloud-stream-kafka
+group = 'cristinatech'
+
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'docker'
 
 jar {
-	baseName = 'kafka-tryout'
-	version = '0.0.1-SNAPSHOT'
+	baseName = 'spring-cloud-stream-kafka'
+	version = '1.0.0-SNAPSHOT'
 }
+
+// copy the DockerFile into the build/libs folder
+build.doLast() {
+    copy {
+        from 'src/main/docker'
+        into 'build/libs'
+    }
+}
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
 }
 
+ext {
+    springCloudVersion = 'Dalston.SR2'
+}
 
 dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
 	compile('org.springframework.boot:spring-boot-starter-actuator')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter-hateoas')
+
+    compileOnly('org.projectlombok:lombok:1.16.16') //Gets rid of boiler plate code in Entity, POJOs, Data Objects
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 dependencyManagement {
 	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.SR5"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
 	}
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.5.1'
+}
+
+task fatJar(type: Jar) {
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+jacoco {
+    toolVersion = "0.7.9"
+}
+
+test {
+    jacoco {
+        append = false
+        destinationFile = file("$buildDir/jacoco.exec")
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+// build.dependsOn jacocoTestReport // Un-comment this when ready
+
+coveralls {
+    jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+}
+
+tasks.coveralls {
+    onlyIf { System.env.'CI' }
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+    push = false
+    applicationName = jar.baseName
+    dockerfile = file('src/main/docker/Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
+}
+

@@ -1,0 +1,53 @@
+version: '2'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper:3.4.6
+    ports:
+      - "2181:2181"
+
+  kafka:
+      image: wurstmeister/kafka:0.10.1.1
+      ports:
+        - "9092:9092"
+        - "1099:1099"
+      environment:
+        KAFKA_ADVERTISED_HOST_NAME: "127.0.0.1"
+        KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+        #Enable Automatic topics creation, topic dresses will have 1 partition and 1 replica, ratings will have 1 partition
+        KAFKA_CREATE_TOPICS: "dresses:1:1,ratings:1:1"
+        #Expose JMX port and enable JMX for monitoring purposes
+        KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099"
+        JMX_PORT: 1099
+      volumes:
+        - "/var/run/docker.sock:/var/run/docker.sock"
+      depends_on:
+        - zookeeper
+
+  redis:
+    container_name: redis
+    image: redis:latest
+
+  postgresdb:
+    container_name: wanderlust-datastore
+    image: postgres:9.6.3
+    ports:
+         - "5432:5432"
+    environment:
+         - POSTGRES_USER=postgres
+         - POSTGRES_PASSWORD=demo
+    command: postgres
+  web:
+    container_name: open-travel-service
+    build: build/libs
+    image: open-travel-spring-boot-docker
+    depends_on: # wanderlust-datastore will be started before the open-travel-service
+      - postgresdb
+    ports:
+      - "9000:9000"
+    links:
+      - postgresdb
+    environment:
+      #SPRING_PROFILES_ACTIVE: postgres
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: demo
