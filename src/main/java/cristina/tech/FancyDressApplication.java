@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * creates a message channel with the name output which is used by the @InboundChannelAdapter.
  * Also see: spring.cloud.stream.bindings.output.destination in application.yml
  * </p>
- *
+ * <p>
  * The application has only a sink (consumer) and the source (producer) is the Python
  * script, see <code>/src/main/resources/producer.py</code> and is run a separate
  * process.

@@ -9,7 +9,9 @@ import lombok.ToString;
 
 import java.io.Serializable;
 
-/** JSON Payload of {@link cristina.tech.worker.event.DressRatedEvent}. */
+/**
+ * JSON Payload of {@link cristina.tech.worker.event.DressRatedEvent}.
+ */
 @Data
 @NoArgsConstructor(force = true) //Jackson JSON needs this for deserialization
 @JsonInclude(JsonInclude.Include.NON_EMPTY)

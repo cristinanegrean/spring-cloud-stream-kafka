@@ -1,2 +1,3 @@
 special-vendored-path/* linguist-vendored
 dresses.p linguist-vendored=false
+*.p linguist-language=Java
