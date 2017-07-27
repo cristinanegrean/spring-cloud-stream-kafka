@@ -106,7 +106,7 @@ jacocoTestReport {
     }
 }
 
-build.dependsOn jacocoTestReport // Un-comment this when ready
+// build.dependsOn jacocoTestReport // Un-comment this when ready
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"

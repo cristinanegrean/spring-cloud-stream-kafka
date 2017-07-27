@@ -13,23 +13,22 @@ CREATE TABLE brand (
 );
 
 CREATE TABLE dress (
-  id            SERIAL    NOT NULL PRIMARY KEY,
-  dress_id      TEXT      NOT NULL UNIQUE,
-  status        TEXT,
-  brand         SERIAL REFERENCES brand (id) ON DELETE CASCADE,
-  activation_at TIMESTAMP,
-  name          TEXT,
-  color         TEXT,
-  season        TEXT,
-  price         NUMERIC,
-  created_at    TIMESTAMP NOT NULL DEFAULT now(),
-  modified_at   TIMESTAMP NOT NULL DEFAULT now()
+  id             SERIAL    NOT NULL PRIMARY KEY,
+  dress_id       TEXT      NOT NULL UNIQUE,
+  status         TEXT,
+  brand          SERIAL REFERENCES brand (id) ON DELETE CASCADE,
+  average_rating SMALLINT,
+  name           TEXT,
+  color          TEXT,
+  season         TEXT,
+  price          NUMERIC,
+  created_at     TIMESTAMP NOT NULL DEFAULT now(),
+  modified_at    TIMESTAMP NOT NULL DEFAULT now()
 );
 
 CREATE TABLE dress_image (
   dress_id  SERIAL REFERENCES dress (id) ON DELETE CASCADE,
-  large_url TEXT,
-  thumb_url TEXT
+  image TEXT NOT NULL
 );
 
 CREATE TABLE dress_rating (
