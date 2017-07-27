@@ -1,0 +1,38 @@
+spring:
+  profiles:
+    active: test
+server:
+      port: 1000
+---
+spring:
+  profiles: test
+  autoconfigure:
+    excludes: org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration
+  spring:
+    cloud:
+      stream:
+        bindings:
+          input:
+            destination: testTopic
+            group: testTopic-group
+            contentType: 'application/json'
+            consumer:
+              durableSubscription: true
+              headerMode: raw
+    jpa:
+      hibernate:
+        ddl-auto: create-drop
+    h2:
+      console: enabled
+logging:
+  level:
+    org:
+      apache:
+        zookeeper:
+          ZooKeeper: error
+      cristina:
+          tech: debug
+      kafka:
+          clients:
+            producer:
+              ProducerConfig: error

@@ -56,9 +56,9 @@ ext {
 
 dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
-    compile('org.springframework.cloud:spring-cloud-stream-metrics')
-    compile('org.springframework.boot:spring-boot-starter-redis:1.2.0.RELEASE')
-    compile('org.springframework.data:spring-data-redis')
+    //compile('org.springframework.cloud:spring-cloud-stream-metrics')
+    //compile('org.springframework.boot:spring-boot-starter-redis:1.2.0.RELEASE')
+    //compile('org.springframework.data:spring-data-redis')
     compile('org.springframework.boot:spring-boot-starter-actuator') //Production ready features to help you monitor and manage your application
     compile('org.springframework.boot:spring-boot-starter-data-jpa') //Java Persistence API including spring-data-jpa, spring-orm and Hibernate
     compile('org.springframework.boot:spring-boot-starter-data-rest') //Exposing Spring Data repositories over REST via spring-data-rest-webmvc
@@ -66,11 +66,10 @@ dependencies {
     compileOnly('org.projectlombok:lombok:1.16.16') //Gets rid of boiler plate code in Entity, POJOs, Data Objects
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+
     runtime('org.springframework.data:spring-data-rest-hal-browser')  //Browsing Spring Data REST repositories in your browser
-    runtime('org.flywaydb:flyway-core') //Flyway Database Migrations library
     runtime('org.postgresql:postgresql') //PostgreSQL jdbc driver
     runtime('com.zaxxer:HikariCP') //high-performance, production-quality JDBC connection pool
-
     testRuntime('com.h2database:h2') //H2 in-memory database for tests (with embedded support)
 }
 
@@ -107,7 +106,7 @@ jacocoTestReport {
     }
 }
 
-// build.dependsOn jacocoTestReport // Un-comment this when ready
+build.dependsOn jacocoTestReport // Un-comment this when ready
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"

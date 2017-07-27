@@ -1,9 +1,6 @@
 package cristina.tech.worker.event;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.annotation.*;
 import cristina.tech.worker.domain.Dress;
 import lombok.Data;
 import lombok.Getter;
@@ -31,6 +28,7 @@ public class DressEvent implements Serializable {
     private static final long serialVersionUID = 1126074635410771217L;
 
     private DressEventType status;
+    @JsonProperty("payload_key")
     private String payloadKey;
     private Long timestamp;
 

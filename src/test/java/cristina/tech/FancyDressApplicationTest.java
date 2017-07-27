@@ -17,8 +17,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 public class FancyDressApplicationTest {
 
     @Test
-    @Ignore
-    public void contextLoads() {
+    public void contextLoads() { //test that application context is initialized correctly by Spring Boot
     }
 
 }

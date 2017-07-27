@@ -1,11 +1,14 @@
 package cristina.tech.worker.domain;
 
-import com.fasterxml.jackson.annotation.*;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +19,8 @@ import java.util.List;
  * By setting 'spring.cloud.stream.bindings.input.contentType' configuration to 'application/json''
  * in application.yml, Spring Cloud Stream automatically translates 'JSON' message to Java POJO.
  */
-@Data
 @NoArgsConstructor(force = true) //Jackson JSON needs this for deserialization
+@Data
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -27,13 +30,11 @@ public class Dress implements Serializable {
 
     private String id, name, color, season;
 
-    @JsonUnwrapped
     private List<Image> images = new ArrayList<>();
 
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     //private ZonedDateTime activationDate;
 
-    @JsonUnwrapped
     private Brand brand;
 
     @JsonIgnore

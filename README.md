@@ -6,6 +6,7 @@
 ![Architecture](architecture_overview.png)
 
 
+
 ### Technology stack:
 * Mainstream programming language: [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
 * [Apache Kafka](http://kafka.apache.org/): message broker responsible for distributing the events
