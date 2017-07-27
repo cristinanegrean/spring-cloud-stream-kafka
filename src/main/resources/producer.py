@@ -165,6 +165,7 @@ def prepare_dress_phase(app_state):
 def main():
     app_state_dir = sys.argv[1] if len(sys.argv) > 1 else '/tmp'
     app_state_filename = os.path.join(app_state_dir, 'app_state.p')
+    click.echo("Attempting to write producer state to disk path '%s'..." % app_state_filename)
     if os.path.exists(app_state_filename):
         with open(app_state_filename, 'rb') as app_state_file:
             app_state = pickle.load(app_state_file)
@@ -173,7 +174,7 @@ def main():
 
     app_state = prepare_dress_phase(app_state)
 
-    kafka_host_port = os.environ.get('KAFKA_HOST_PORT', 'kafka:9092')
+    kafka_host_port = os.environ.get('KAFKA_HOST_PORT', 'localhost:9092')
     connect_attempts_remainig = 20
     click.echo("Attempting to connect to Kafka on '%s'..." % kafka_host_port)
     while connect_attempts_remainig >= 0:

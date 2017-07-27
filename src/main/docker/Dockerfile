@@ -15,8 +15,7 @@ VOLUME /tmp
 # The project JAR file is ADDed to the container as "app.jar"
 ADD spring-cloud-stream-kafka-1.0.0-SNAPSHOT.jar app.jar
 
-#Expose Tomcat HTTP Port, by default 8080, overriden to server.port=9000 and only exposed for the /health
-# Spring Boot Actuator monitoring endpoint, as this microservice exposes no web API
+#Expose Tomcat HTTP Port, by default 8080, overriden to server.port=9000
 EXPOSE 9000
 
 # You can use a RUN command to "touch" the jar file so that it has a file modification time

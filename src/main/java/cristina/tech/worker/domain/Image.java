@@ -1,4 +1,4 @@
-package cristina.tech.domain;
+package cristina.tech.worker.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

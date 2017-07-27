@@ -3,35 +3,85 @@ spring:
     active: development
 server:
   port: 9000
+flyway:
+  validate-on-migrate: false
+  enabled: false
 ---
 spring:
   profiles: development
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dresses
+    driverClassName: org.postgresql.Driver
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    hikari:
+      maximumPoolSize: 10
+      connectionTimeout: 1500
+  data:
+    rest:
+      base-path: /api
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
     stream:
       bindings:
-        output:
-          destination: dresses
-          group: dresses-group
-          contentType: 'application/json'
-        input:
+        idresses:
           destination: dresses
           group: dresses-group
           contentType: 'application/json'
           consumer:
             durableSubscription: true
+            headerMode: raw
+        iratings:
+          destination: ratings
+          group: ratings-group
+          contentType: 'application/json'
+          consumer:
+            durableSubscription: true
+            headerMode: raw
 ---
 spring:
   profiles: test
+  autoconfigure:
+    excludes: org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration
+  flyway:
+    enabled: false
+  spring:
+    jpa:
+      hibernate:
+        ddl-auto: create-drop
+    h2:
+      console: enabled
 logging:
   level:
     org:
       apache:
         zookeeper:
           ZooKeeper: error
-    org.apache.kafka.clients.producer.ProducerConfig: error
+      cristina:
+          tech: debug
+      kafka:
+          clients:
+            producer:
+              ProducerConfig: error
 ---
 spring:
   profiles: docker
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dresses
+    driverClassName: org.postgresql.Driver
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    hikari:
+      maximumPoolSize: 10
+      connectionTimeout: 1500
+  data:
+    rest:
+      base-path: /api
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
     stream:
       kafka:
@@ -39,14 +89,18 @@ spring:
           brokers: ${DOCKER_IP:127.0.0.1}
           zk-nodes: ${DOCKER_IP:127.0.0.1}
       bindings:
-        output:
-          destination: dresses
-          group: dresses-group
-          contentType: 'application/json'
-        input:
+        idresses:
           destination: dresses
           group: dresses-group
           contentType: 'application/json'
           consumer:
             durableSubscription: true
+            headerMode: raw
+        iratings:
+          destination: ratings
+          group: ratings-group
+          contentType: 'application/json'
+          consumer:
+            durableSubscription: true
             concurrency: 20
+            headerMode: raw

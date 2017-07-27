@@ -28,7 +28,7 @@ services:
     image: redis:latest
 
   postgresdb:
-    container_name: wanderlust-datastore
+    container_name: dress-sql-datastore
     image: postgres:9.6.3
     ports:
          - "5432:5432"
@@ -37,10 +37,10 @@ services:
          - POSTGRES_PASSWORD=demo
     command: postgres
   web:
-    container_name: open-travel-service
+    container_name: fancy-dress-service
     build: build/libs
-    image: open-travel-spring-boot-docker
-    depends_on: # wanderlust-datastore will be started before the open-travel-service
+    image: spring-cloud-stream-kafka
+    depends_on: # dress-sql-datastore will be started before the open-travel-service
       - postgresdb
     ports:
       - "9000:9000"

@@ -1,4 +1,4 @@
-package cristina.tech.domain;
+package cristina.tech.worker.domain;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -7,15 +7,13 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * The {@link Dress} domain object contains information related to a fashionable dress.
- * The status of a dress is event sourced using events logged to the {@link cristina.tech.event.DressEvent}
+ * The status of a dress is event sourced using events logged to the {@link cristina.tech.worker.event.DressEvent}
  * collection attached to this resource.
  * <p>
  * By setting 'spring.cloud.stream.bindings.input.contentType' configuration to 'application/json''
@@ -35,6 +33,7 @@ public class Dress implements Serializable {
 
     private String id, name, color, season;
     private List<Image> images = new ArrayList<>();
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private ZonedDateTime activationDate;
     private Brand brand;
     private DressStatus status;

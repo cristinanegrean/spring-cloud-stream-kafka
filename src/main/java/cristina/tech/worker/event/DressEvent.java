@@ -1,17 +1,16 @@
-package cristina.tech.event;
+package cristina.tech.worker.event;
 
-import cristina.tech.domain.Dress;
+import cristina.tech.worker.domain.Dress;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
 
 /**
  * The domain event {@link DressEvent} tracks the type and state of events as
- * applied to the {@link cristina.tech.domain.Dress} domain object. This event resource can be used
- * to event source the aggregate state of {@link cristina.tech.domain.Dress}.
+ * applied to the {@link cristina.tech.worker.domain.Dress} domain object. This event resource can be used
+ * to event source the aggregate state of {@link cristina.tech.worker.domain.Dress}.
  * <p>
  * This event resource also provides a transaction log that can be used to append
  * actions to the event.

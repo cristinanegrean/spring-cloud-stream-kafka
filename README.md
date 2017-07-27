@@ -1,9 +1,9 @@
 ## Fancy Dress Worker Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates.
 
+[![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)]
 
 ![Architecture](architecture_overview.png)
 
-As you note in the above architecture diagram, there is a pin pointing that the `Fancy Dress Worker` Service is scope of this [GitHub repo](https://github.com/cristinanegrean/spring-cloud-stream-kafka)
 
 ### Technology stack:
 * Mainstream programming language: [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
@@ -49,6 +49,10 @@ export REDIS_HOME=/opt/redis-4.0.0
 export PATH=$PATH:$KAFKA_HOME:$REDIS_HOME
 
 export KAFKA_HOST_PORT=localhost:9092
+export DOCKER_IP=127.0.0.1
+
+export POSTGRES_USER=postgres
+export POSTGRES_PASSWORD=demo
 
 alias zoostart="$KAFKA_HOME/bin/zookeeper-server-start.sh $KAFKA_HOME/config/zookeeper.properties"
 alias zoostop="$KAFKA_HOME/bin/zookeeper-server-stop.sh"
@@ -61,9 +65,21 @@ alias kafkastart="$KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/serve
 alias kafkastop="$KAFKA_HOME/bin/kafka-server-stop.sh"
 
 alias redisstart="$REDIS_HOME/src/redis-server
+alias postgres="postgres -D /usr/local/var/postgres"
 ```
 
-2.3) [Download and install Redis](https://redis.io/download) and start the Redis server
+2.3) Install Data Services
+
+Install and start Postgres, create `dresses` DB:
+
+```
+$ brew install postgres
+$ postgres
+$ createdb dresses
+$ psql -h localhost -U postgres dresses
+```
+
+[Download and install Redis](https://redis.io/download) and start the Redis server
 
 ```
 $ redisstart
@@ -109,8 +125,8 @@ Install packages and start the script:
 
 ```
 $ python3 -m pip install numpy click kafka-python
-$ cd spring-cloud-stream-kafka
-$ python3 src/main/resources/producer.py
+$ cd spring-cloud-stream-kafka/src/main/resources/
+$ sudo python3 producer.py
 ```
 
 The producer.py script sends messages on two separate topics: `dresses` and `ratings`. These messages contain information on individual dresses and dress ratings (1 to 5 stars) respectively.
@@ -175,4 +191,4 @@ Unlike dresses, ratings are never updated.
 #### Miscelaneous:
 
 * Using Project Lombok to get rid of boiler plate code in Entity, POJOs, Data Objects
-* Application health endpoint: http://localhost:8080/health
+* Application health endpoint: http://localhost:9000/health
