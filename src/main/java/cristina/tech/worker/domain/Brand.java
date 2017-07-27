@@ -1,8 +1,13 @@
 package cristina.tech.worker.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+
+import java.io.Serializable;
 
 /**
  * Embeddable data object, part of the {@link Dress} domain aggregate.
@@ -10,7 +15,10 @@ import lombok.ToString;
 @Data
 @ToString
 @NoArgsConstructor(force = true) //Jackson JSON needs this for deserialization
-public class Brand {
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Brand implements Serializable {
 
     String logoUrl;
     String name;

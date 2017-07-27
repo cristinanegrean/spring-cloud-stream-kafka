@@ -1,8 +1,11 @@
 ## Fancy Dress Worker Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates.
 
 [![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)]
+[![BCH compliance](https://bettercodehub.com/edge/badge/cristinanegrean/spring-cloud-stream-kafka?branch=master)](https://bettercodehub.com/)
 
 ![Architecture](architecture_overview.png)
+
+![Relational Domain model](diagram.png)
 
 
 ### Technology stack:

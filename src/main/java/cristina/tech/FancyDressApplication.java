@@ -1,23 +1,8 @@
 package cristina.tech;
 
 
-import cristina.tech.worker.domain.Brand;
-import cristina.tech.worker.domain.Dress;
-import cristina.tech.worker.domain.DressStatus;
-import cristina.tech.worker.event.DressEvent;
-import cristina.tech.worker.event.DressEventType;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.stream.annotation.EnableBinding;
-import org.springframework.cloud.stream.messaging.Source;
-import org.springframework.context.annotation.Bean;
-import org.springframework.integration.annotation.InboundChannelAdapter;
-import org.springframework.integration.core.MessageSource;
-import org.springframework.integration.support.MessageBuilder;
-
-import java.math.BigDecimal;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
 
 
 /**
