@@ -13,10 +13,10 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "brand")
+@Table(name = "dress")
 @NoArgsConstructor(force = true) //Default C-tor needed by Jackson JSON.
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 public class Dress extends AbstractEntity {
     private static final long serialVersionUID = 9026074635410771215L;
 

@@ -36,7 +36,7 @@ spring:
           contentType: 'application/json'
           consumer:
             durableSubscription: true
-            headerMode: embeddedHeaders
+            headerMode: raw
 ---
 spring:
   profiles: docker
