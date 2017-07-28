@@ -14,8 +14,8 @@ CREATE TABLE brand (
 
 CREATE TABLE dress (
   id             SERIAL    NOT NULL PRIMARY KEY,
-  dress_id       TEXT      NOT NULL UNIQUE,
-  status         TEXT,
+  --dress_id       TEXT,
+  --status         TEXT,
   brand          SERIAL REFERENCES brand (id) ON DELETE CASCADE,
   average_rating SMALLINT,
   name           TEXT,
@@ -32,7 +32,7 @@ CREATE TABLE dress_image (
 );
 
 CREATE TABLE dress_rating (
-  dress_id  TEXT NOT NULL REFERENCES dress (dress_id) ON DELETE CASCADE,
+  dress_id  SERIAL NOT NULL REFERENCES dress (id) ON DELETE CASCADE,
   rating_id TEXT NOT NULL,
   stars     SMALLINT,
   PRIMARY KEY (dress_id, rating_id)

@@ -35,7 +35,7 @@ public class Dress extends AbstractEntity {
     private BigDecimal price;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "dress_image", joinColumns = @JoinColumn(name = "dress", referencedColumnName = "id"))
+    @CollectionTable(name = "dress_image", joinColumns = @JoinColumn(name = "dress_id", referencedColumnName = "id"))
     @Column(name = "image")
     private List<String> images;
 
