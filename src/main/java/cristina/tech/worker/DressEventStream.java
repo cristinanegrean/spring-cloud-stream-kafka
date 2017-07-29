@@ -4,7 +4,6 @@ package cristina.tech.worker;
 import cristina.tech.FancyDressApplication;
 import cristina.tech.worker.event.DressCreatedEvent;
 import cristina.tech.worker.event.DressRatedEvent;
-import cristina.tech.worker.event.DressUpdatedEvent;
 import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,18 +26,9 @@ public class DressEventStream {
 
     private static Logger logger = LoggerFactory.getLogger(DressEventStream.class);
 
-    @StreamListener(
-            target = DressesTrade.INBOUND_DRESSES,
-            condition = "headers['status']=='CREATED'")
+    @StreamListener(target = DressesTrade.INBOUND_DRESSES)
     public void receiveDressCreatedEvent(DressCreatedEvent dressCreatedEvent) {
         logger.info("Received: " + dressCreatedEvent.toString());
-    }
-
-    @StreamListener(
-            target = DressesTrade.INBOUND_DRESSES,
-            condition = "headers['status']=='UPDATED'")
-    public void receiveDressUpdatedEvent(DressUpdatedEvent dressUpdatedEvent) {
-        logger.info("Received: " + dressUpdatedEvent.toString());
     }
 
     @StreamListener(target = DressesTrade.INBOUND_RATINGS)
