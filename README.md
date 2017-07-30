@@ -7,6 +7,7 @@ Demonstrated concepts:
 * Event Stream Processing
 ![Streaming dress message events](stream_dress_message_event.png)
 ![Streaming rating message events](stream_rating_message_event.png)
+![Sink message events to db](sink_events_to_datastore.png)
 * Eventual Consistency
 * Compensating Transactions
 
