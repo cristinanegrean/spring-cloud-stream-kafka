@@ -3,6 +3,8 @@ spring:
     active: test
 server:
       port: 1000
+flyway:
+  enabled: false
 ---
 spring:
   profiles: test

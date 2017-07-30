@@ -3,6 +3,10 @@ spring:
     active: development
 server:
     port: 9000
+flyway:
+  enabled: true
+  validate-on-migrate: false
+  baseline-on-migrate: true
 ---
 spring:
   profiles: development
@@ -26,14 +30,14 @@ spring:
         idresses:
           destination: dresses
           group: dresses-group
-          contentType: 'application/x-java-object;type=cristina.tech.worker.event.DressMessageEvent'
+          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
           consumer:
             durableSubscription: true
             headerMode: raw
         iratings:
           destination: ratings
           group: ratings-group
-          contentType: 'application/x-java-object;type=cristina.tech.worker.event.RatingMessageEvent'
+          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
           consumer:
             durableSubscription: true
             headerMode: raw
@@ -64,14 +68,14 @@ spring:
         idresses:
           destination: dresses
           group: dresses-group
-          contentType: 'application/x-java-object;type=cristina.tech.worker.event.DressMessageEvent'
+          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
           consumer:
             durableSubscription: true
             headerMode: raw
         iratings:
           destination: ratings
           group: ratings-group
-          contentType: 'application/x-java-object;type=cristina.tech.worker.event.RatingMessageEvent'
+          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
           consumer:
             durableSubscription: true
             concurrency: 20

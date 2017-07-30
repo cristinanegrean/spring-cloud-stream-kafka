@@ -2,6 +2,12 @@
 
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 
+![Streaming dress message events](stream_dress_message_event.png)
+![Streaming rating message events](stream_rating_message_event.png)
+
+TODO: Update overview with concise implementation: 1 service component handing both worker + web
+
+Desired production architecture when scalling AMQP-driven event message processor separately from hypermedia driven web service
 ![Architecture](architecture_overview.png)
 
 
@@ -13,7 +19,7 @@
 * [Spring Data Rest](http://projects.spring.io/spring-data-rest/)
 * [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
 * [Hibernate Validator](http://hibernate.org/validator/), which is the reference implementation of [JSR 303/349 - Bean Validation 1.0/1.1 API] (http://beanvalidation.org/1.1/spec/)
-* [Redis](https://redis.io/) an open-source, networked, in-memory, key-value data store with optional durability. Leverage for key-value store and lookup of tuples (dress_id, rating_count) to power "trending dresses" analytics. See also [Spring Cloud Data Flow](http://docs.spring.io/spring-cloud-dataflow/docs/current-SNAPSHOT/reference/htmlsingle/#arch-analytics)
+* [PostgreSQL 9.6.3](https://www.postgresql.org/) open-source datastore
 * [Spring Boot](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
 
 ### Bootstraping the service
