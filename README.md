@@ -1,10 +1,8 @@
 ## Fancy Dress Worker Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates.
 
-[![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)]
-[![BCH compliance](https://bettercodehub.com/edge/badge/cristinanegrean/spring-cloud-stream-kafka?branch=master)](https://bettercodehub.com/)
+![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 
 ![Architecture](architecture_overview.png)
-
 
 
 ### Technology stack:
@@ -12,6 +10,9 @@
 * [Apache Kafka](http://kafka.apache.org/): message broker responsible for distributing the events
 * [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/): build message-driven microservices. Spring Cloud Stream provides an opinionated configuration of message brokers (Kafka or RabbitMQ), introducing the concepts of persistent pub/sub semantics, consumer groups and partitions for horizontal scaling.
 * [Spring Integration](https://projects.spring.io/spring-integration/): provide connectivity to message brokers, is used under the hood by Spring Cloud Stream.
+* [Spring Data Rest](http://projects.spring.io/spring-data-rest/)
+* [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
+* [Hibernate Validator](http://hibernate.org/validator/), which is the reference implementation of [JSR 303/349 - Bean Validation 1.0/1.1 API] (http://beanvalidation.org/1.1/spec/)
 * [Redis](https://redis.io/) an open-source, networked, in-memory, key-value data store with optional durability. Leverage for key-value store and lookup of tuples (dress_id, rating_count) to power "trending dresses" analytics. See also [Spring Cloud Data Flow](http://docs.spring.io/spring-cloud-dataflow/docs/current-SNAPSHOT/reference/htmlsingle/#arch-analytics)
 * [Spring Boot](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
 
@@ -170,7 +171,7 @@ Example message:
 }
 ```
 
-The `status` field tells you whether the message contains a creation or a update of a dress using the values `CREATED` or `UPDATED` respectively. The `payload_key` will always have the same value as the `id` field of the contained dress.
+The `eventType` field tells you whether the message contains a creation or a update of a dress using the values `CREATED` or `UPDATED` respectively. The `payload_key` will always have the same value as the `id` field of the contained dress.
 
 ##### Rating message format
 Example message:

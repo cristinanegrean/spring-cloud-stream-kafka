@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import cristina.tech.worker.event.RatingMessageEvent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.io.Serializable;
 
 /**
- * JSON Payload of {@link cristina.tech.worker.event.DressRatedEvent}.
+ * JSON Payload of {@link RatingMessageEvent}.
  */
 @Data
 @NoArgsConstructor(force = true) //Jackson JSON needs this for deserialization

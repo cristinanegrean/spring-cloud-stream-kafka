@@ -1,0 +1,23 @@
+{
+  "status": "UPDATED",
+  "payload_key": "A0M21C000-Q11",
+  "payload": {
+    "id": "A0M21C000-Q11",
+    "images": [
+      {
+        "large_url": "http://i3.ztat.net/large_hd/A0/M2/1C/00/0Q/11/A0M21C000-Q11@12.jpg",
+        "thumb_url": "http://i3.ztat.net/catalog_hd/A0/M2/1C/00/0Q/11/A0M21C000-Q11@12.jpg"
+      }
+    ],
+    "activation_date": "2016-11-22T15:18:41+01:00",
+    "name": "SPOLETO - Summer dress - caviar",
+    "color": "Black",
+    "season": "WINTER",
+    "price": 35.99,
+    "brand": {
+      "logo_url": "https://i4.ztat.net/brand/e69a6da2-4a38-424b-a8a4-22e3031eda66.jpg",
+      "name": "And Less"
+    }
+  },
+  "timestamp": 1487593122542
+}

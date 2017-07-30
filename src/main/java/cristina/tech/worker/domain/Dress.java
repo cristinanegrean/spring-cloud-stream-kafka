@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The {@link Dress} domain object contains information related to a fashionable dress.
- * The status of a dress is event sourced using events logged to the {@link cristina.tech.worker.event.DressEvent}
+ * The {@link Dress} core object contains information related to a fashionable dress.
+ * The eventType of a dress is event sourced using events logged to the {@link cristina.tech.worker.event.DressEvent}
  * <p>
  * By setting 'spring.cloud.stream.bindings.input.contentType' configuration to 'application/json''
  * in application.yml, Spring Cloud Stream automatically translates 'JSON' message to Java POJO.
@@ -31,9 +31,6 @@ public class Dress implements Serializable {
     private String id, name, color, season;
 
     private List<Image> images = new ArrayList<>();
-
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    //private ZonedDateTime activationDate;
 
     private Brand brand;
 

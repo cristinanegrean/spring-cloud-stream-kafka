@@ -23,7 +23,8 @@ public abstract class AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonTypeId
-    protected Integer id;
+    @Column(name = "uid")
+    protected Integer uid;
 
     @Column(name = "created_at")
     @CreatedDate
@@ -45,10 +46,6 @@ public abstract class AbstractEntity implements Serializable {
     }
 
     protected AbstractEntity() {
-    }
-
-    public Integer getId() {
-        return id;
     }
 }
 

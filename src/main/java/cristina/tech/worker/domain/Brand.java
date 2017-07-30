@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * Embeddable data object, part of the {@link Dress} domain aggregate.
+ * Embeddable data object, part of the {@link Dress} core aggregate.
  */
 @NoArgsConstructor(force = true) //Jackson JSON needs this for deserialization
 @Data
