@@ -2,8 +2,13 @@
 
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 
+Demonstrated concepts:
+
+* Event Stream Processing
 ![Streaming dress message events](stream_dress_message_event.png)
 ![Streaming rating message events](stream_rating_message_event.png)
+* Eventual Consistency
+* Compensating Transactions
 
 TODO: Update overview with concise implementation: 1 service component handing both worker + web
 
@@ -11,7 +16,7 @@ Desired production architecture when scalling AMQP-driven event message processo
 ![Architecture](architecture_overview.png)
 
 
-### Technology stack:
+### Spring projects and technology stack used:
 * Mainstream programming language: [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
 * [Apache Kafka](http://kafka.apache.org/): message broker responsible for distributing the events
 * [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/): build message-driven microservices. Spring Cloud Stream provides an opinionated configuration of message brokers (Kafka or RabbitMQ), introducing the concepts of persistent pub/sub semantics, consumer groups and partitions for horizontal scaling.
@@ -73,7 +78,6 @@ alias zooenvi="echo envi | nc 127.0.0.1 2181"
 alias kafkastart="$KAFKA_HOME/bin/kafka-server-start.sh $KAFKA_HOME/config/server.properties"
 alias kafkastop="$KAFKA_HOME/bin/kafka-server-stop.sh"
 
-alias redisstart="$REDIS_HOME/src/redis-server
 alias postgres="postgres -D /usr/local/var/postgres"
 ```
 
@@ -86,12 +90,6 @@ $ brew install postgres
 $ postgres
 $ createdb dresses
 $ psql -h localhost -U postgres dresses
-```
-
-[Download and install Redis](https://redis.io/download) and start the Redis server
-
-```
-$ redisstart
 ```
 
 2.4) Open a new terminal window and Start Apache Zookeeper first.
@@ -199,5 +197,6 @@ Unlike dresses, ratings are never updated.
 
 #### Miscelaneous:
 
-* Using Project Lombok to get rid of boiler plate code in Entity, POJOs, Data Objects
+* Using Project Lombok to get rid of boiler plate code as getters, setters,
+ no argument constructors in Entity, POJOs, Data Objects
 * Application health endpoint: http://localhost:9000/health
