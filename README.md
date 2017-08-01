@@ -53,9 +53,20 @@ docker compose -f docker-compose-dev.yml up
 
 #### When no Docker installed, on OS X follow below steps:
 
-2.1) [Download Apache Kafka binaries](https://kafka.apache.org/quickstart)
+2.1) [Download and install Apache Kafka](https://kafka.apache.org/quickstart)
 
-2.2) Update your .bash_profile file with KAFKA_HOME environment variable, and add aliases to start ZooKeeper server and Kafka server (in case you want to save on typing commands each time)
+2.2) Install PostgreSQL, start server and create `dresses` DB. On OS X:
+
+```
+$ brew install postgres
+$ postgres -D /usr/local/var/postgres
+$ createdb dresses
+$ psql -h localhost -U postgres dresses
+```
+
+2.3) Update your .bash_profile file: add KAFKA_HOME, KAFKA_HOST_PORT, DOCKER_IP,
+POSTGRES_USER, POSTGRES_PASSWORD environment variables. These will be used by producer and consumer applications as externalized machine specific configuration.
+Also add aliases to start ZooKeeper, Kafka, Postgres server, to save on typing long commands each time.
 
 ```
 export KAFKA_HOME=/opt/kafka_2.11-0.10.2.0
@@ -80,16 +91,6 @@ alias kafkastop="$KAFKA_HOME/bin/kafka-server-stop.sh"
 alias postgres="postgres -D /usr/local/var/postgres"
 ```
 
-2.3) Install Data Services
-
-Install and start Postgres, create `dresses` DB:
-
-```
-$ brew install postgres
-$ postgres
-$ createdb dresses
-$ psql -h localhost -U postgres dresses
-```
 
 2.4) Open a new terminal window and Start Apache Zookeeper first.
 The Apache Kafka distribution comes with default configuration files for both Zookeeper and Kafka, which makes getting started easy.
@@ -104,7 +105,7 @@ $ zoostart
 $ kafkastart
 ```
 
-2.6) Run the service (with active development profile):
+2.6) Start the fancy dress service (default active development profile):
 
 ```
 $ java -jar build/libs/spring-cloud-stream-kafka-1.0.0-SNAPSHOT.jar
@@ -194,6 +195,9 @@ Unlike dresses, ratings are never updated.
 
 #### Miscelaneous:
 
-* Using Project Lombok to get rid of boiler plate code as getters, setters,
- no argument constructors in Entity, POJOs, Data Objects
-* Application health endpoint: http://localhost:9000/health
+* [Project Lombok](https://projectlombok.org/) has been used to get rid of boiler plate code as getters, setters, no argument constructors in Entity, POJOs, Data Objects.
+* Application health endpoint, non-sensitive: http://localhost:8081/admin/health
+* Fancy dress service is using [Flyway](https://flywaydb.org/) to evolve the
+`dresses` DB schema. Schema version is available using the non-sensitive admin
+ endpoint: http://localhost:8081/admin/flyway or from the psql console
+

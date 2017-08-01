@@ -3,10 +3,18 @@ spring:
     active: development
 server:
     port: 9000
+management:
+  port: 8081
+  context-path: /admin
 flyway:
   enabled: true
   validate-on-migrate: false
   baseline-on-migrate: true
+endpoints:
+  health:
+    sensitive: false
+  flyway:
+    sensitive: false
 ---
 spring:
   profiles: development

@@ -65,8 +65,8 @@ dependencies {
     runtime('org.springframework.data:spring-data-rest-hal-browser')  //Browsing Spring Data REST repositories in your browser
     runtime('org.postgresql:postgresql') //PostgreSQL jdbc driver
     runtime('com.zaxxer:HikariCP') //high-performance, production-quality JDBC connection pool
-
     runtime('org.flywaydb:flyway-core') //Flyway Database Migrations library
+
     testRuntime('com.h2database:h2') //H2 in-memory database for tests (with embedded support)
 }
 
