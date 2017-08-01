@@ -23,12 +23,8 @@ services:
       depends_on:
         - zookeeper
 
-  redis:
-    container_name: redis
-    image: redis:latest
-
-  postgresdb:
-    container_name: dress-sql-datastore
+ postgresdb:
+    container_name: dress-datastore
     image: postgres:9.6.3
     ports:
          - "5432:5432"
@@ -40,7 +36,7 @@ services:
     container_name: fancy-dress-service
     build: build/libs
     image: spring-cloud-stream-kafka
-    depends_on: # dress-sql-datastore will be started before the open-travel-service
+    depends_on: # dress-datastore will be started before the fancy-dress-service
       - postgresdb
     ports:
       - "9000:9000"

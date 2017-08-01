@@ -1,4 +1,5 @@
-## Fancy Dress Worker Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates.
+## Fancy Dress Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates from a Python Producer and expose it via a REST API
+
 
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 
@@ -7,17 +8,13 @@ Demonstrated concepts:
 * Event Stream Processing
 ![Streaming dress message events](stream_dress_message_event.png)
 ![Streaming rating message events](stream_rating_message_event.png)
-![Sink message events to db](sink_events_to_datastore.png)
-* Eventual Consistency
-* Compensating Transactions
+* Handling out-of-order events
+![Streaming dress message events](stream_out_of_order_create_event.png)
+![Streaming rating message events](update_sink_before_create.png)
 
-TODO: Update overview with concise implementation: 1 service component handing both worker + web
-
-Desired production architecture when scalling AMQP-driven event message processor separately from hypermedia driven web service
 ![Architecture](architecture_overview.png)
 
-
-### Spring projects and technology stack used:
+### Technology stack used:
 * Mainstream programming language: [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
 * [Apache Kafka](http://kafka.apache.org/): message broker responsible for distributing the events
 * [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/): build message-driven microservices. Spring Cloud Stream provides an opinionated configuration of message brokers (Kafka or RabbitMQ), introducing the concepts of persistent pub/sub semantics, consumer groups and partitions for horizontal scaling.
@@ -27,6 +24,7 @@ Desired production architecture when scalling AMQP-driven event message processo
 * [Hibernate Validator](http://hibernate.org/validator/), which is the reference implementation of [JSR 303/349 - Bean Validation 1.0/1.1 API] (http://beanvalidation.org/1.1/spec/)
 * [PostgreSQL 9.6.3](https://www.postgresql.org/) open-source datastore
 * [Spring Boot](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
+* [Docker](https://www.docker.com/docker-mac)
 
 ### Bootstraping the service
 
@@ -43,7 +41,7 @@ Build and run tests. And the Docker image of the SpringBoot microservice. Note G
 $ ./gradlew clean build buildDocker
 ```
 
-2) Bootstrap Backing Services (Kafka Zooker, Redis) and the `Dress Consumer Service`
+2) Bootstrap Services: Kafka Zooker, Redis) and the `Dress Consumer Service`
 
 #### Using Docker:
 
@@ -56,12 +54,12 @@ docker compose -f docker-compose-dev.yml up
 #### When no Docker installed, on OS X follow below steps:
 
 2.1) [Download Apache Kafka binaries](https://kafka.apache.org/quickstart)
+
 2.2) Update your .bash_profile file with KAFKA_HOME environment variable, and add aliases to start ZooKeeper server and Kafka server (in case you want to save on typing commands each time)
 
 ```
 export KAFKA_HOME=/opt/kafka_2.11-0.10.2.0
-export REDIS_HOME=/opt/redis-4.0.0
-export PATH=$PATH:$KAFKA_HOME:$REDIS_HOME
+export PATH=$PATH:$KAFKA_HOME
 
 export KAFKA_HOST_PORT=localhost:9092
 export DOCKER_IP=127.0.0.1
@@ -124,9 +122,7 @@ Edit `.bash_profile`:
 
 ```
 export PYTHON_HOME=/usr/local/bin/python3
-export PATH=$PATH::$PYTHON_HOME
-export KAFKA_HOST_PORT=localhost:9092
-export DOCKER_IP=127.0.0.1
+export PATH=$PATH:$PYTHON_HOME
 ```
 
 Install packages and start the script:

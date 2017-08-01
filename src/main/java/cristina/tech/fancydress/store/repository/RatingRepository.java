@@ -5,10 +5,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-
 public interface RatingRepository extends CrudRepository<Rating, Integer> {
 
-    @Query("select r.stars from Rating r where r.dressId = :dressId")
-    List<Integer> listStarsByDressId(@Param("dressId") String dressId);
+    @Query(value = "SELECT ROUND(AVG(stars)) FROM rating WHERE dress_id = :dressId GROUP BY dress_id", nativeQuery = true)
+    Integer getAverageRating(@Param("dressId") String dressId);
 }

@@ -60,8 +60,6 @@ public class DressEventStoreService {
         dress.setSeason(dressMessageEvent.getPayload().getSeason());
         dress.setPrice(dressMessageEvent.getPayload().getPrice());
         dress.setColor(dressMessageEvent.getPayload().getColor());
-
-        // any brand info?
         dress.setBrand(fromDressMessageEvent(dressMessageEvent.getPayload().getBrand()));
 
         // any image thumbnails?

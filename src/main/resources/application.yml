@@ -21,6 +21,7 @@ spring:
   data:
     rest:
       base-path: /api
+      detection-strategy: annotated
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
@@ -55,6 +56,7 @@ spring:
   data:
     rest:
       base-path: /api
+      detection-strategy: annotated
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
