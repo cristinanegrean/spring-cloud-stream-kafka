@@ -5,6 +5,7 @@ import cristina.tech.fancydress.store.domain.Brand;
 import cristina.tech.fancydress.store.domain.Dress;
 import cristina.tech.fancydress.store.repository.BrandRepository;
 import cristina.tech.fancydress.store.repository.DressRepository;
+import cristina.tech.fancydress.store.repository.RatingRepository;
 import cristina.tech.fancydress.worker.event.DressEventType;
 import cristina.tech.fancydress.worker.event.DressMessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class DressEventStoreService {
     @Autowired
     private BrandRepository brandRepository;
 
+    @Autowired
+    private RatingRepository ratingRepository;
+
     /**
      * If producer sends 2 or more dress messages with status 'CREATED' and same dress id, data integrity check is
      * enforced at the database level and subsequent messages (after 1st received and stored) will be rejected with error.
@@ -36,6 +40,9 @@ public class DressEventStoreService {
                 dressMessageEvent, dressMessageEvent.getEventType() == DressEventType.CREATED);
 
         if (dress != null) {
+            // set average rating, hence rating message event may have arrived
+            // before dress create or update message event
+            dress.setAverageRating(ratingRepository.getAverageRating(dress.getId()));
             dressRepository.save(dress);
         }
     }

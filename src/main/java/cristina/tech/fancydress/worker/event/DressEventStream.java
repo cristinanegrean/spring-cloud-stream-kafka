@@ -2,8 +2,7 @@ package cristina.tech.fancydress.worker.event;
 
 import cristina.tech.fancydress.store.service.DressEventStoreService;
 import cristina.tech.fancydress.store.service.RatingEventStoreService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.stream.annotation.EnableBinding;
@@ -20,24 +19,26 @@ import org.springframework.context.annotation.Profile;
 @EnableAutoConfiguration
 @EnableBinding(DressInboundChannels.class)
 @Profile({"development", "docker"})
+@Slf4j
 public class DressEventStream {
 
-    @Autowired private DressEventStoreService dressEventStoreService;
+    @Autowired
+    private DressEventStoreService dressEventStoreService;
 
-    @Autowired private RatingEventStoreService ratingEventStoreService;
+    @Autowired
+    private RatingEventStoreService ratingEventStoreService;
 
-    private static Logger logger = LoggerFactory.getLogger(DressEventStream.class);
     private static final String LOG_RECEIVED = "Received: ";
 
     @StreamListener(target = DressInboundChannels.INBOUND_DRESSES)
     public void receiveDressMessageEvent(DressMessageEvent dressMessageEvent) {
-        logger.info(LOG_RECEIVED + dressMessageEvent.toString());
+        log.info(LOG_RECEIVED + dressMessageEvent.toString());
         dressEventStoreService.apply(dressMessageEvent);
     }
 
     @StreamListener(target = DressInboundChannels.INBOUND_RATINGS)
     public void receiveRatingMessageEvent(RatingMessageEvent ratingMessageEvent) {
-        logger.info(LOG_RECEIVED + ratingMessageEvent.toString());
+        log.info(LOG_RECEIVED + ratingMessageEvent.toString());
         ratingEventStoreService.apply(ratingMessageEvent);
     }
 

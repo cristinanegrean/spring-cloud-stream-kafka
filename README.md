@@ -11,8 +11,14 @@ Demonstrated concepts:
 * Handling out-of-order events
 ![Streaming dress message events](stream_out_of_order_create_event.png)
 ![Streaming rating message events](update_sink_before_create.png)
+* REST API to display consumed data, complete with paging and sorting
+![Dresses paging](dresses_paging.png)
+![Dresses endpoint](dresses_endpoint.png)
+* Windowing with out-of-order data, aggregation and lookup, using
+`count so far`. The timestamp used for windowing is the timestamp in the rating message event (event-time)
 
 ![Architecture](architecture_overview.png)
+
 
 ### Technology stack used:
 * Mainstream programming language: [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
@@ -41,7 +47,7 @@ Build and run tests. And the Docker image of the SpringBoot microservice. Note G
 $ ./gradlew clean build buildDocker
 ```
 
-2) Bootstrap Services: Kafka Zooker, Redis) and the `Dress Consumer Service`
+2) Bootstrap Services: Kafka Zooker, Postres and the `Dress Consumer Service`
 
 #### Using Docker:
 
