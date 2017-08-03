@@ -2,6 +2,7 @@
 
 
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
 
 Demonstrated concepts:
 
@@ -10,6 +11,7 @@ Demonstrated concepts:
 * REST API to display consumed data, complete with paging and sorting
 * Windowing with out-of-order data, aggregation and lookup, using
 `count so far`. The timestamp used for windowing is the timestamp in the rating message event (event-time)
+* See screenshots [here](https://github.com/cristinanegrean/spring-cloud-stream-kafka/tree/master/screenshots)
 
 ![Architecture](architecture_overview.png)
 
