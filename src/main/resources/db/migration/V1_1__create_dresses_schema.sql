@@ -16,7 +16,7 @@ CREATE TABLE dress (
   uid            SERIAL    NOT NULL PRIMARY KEY,
   id             TEXT      NOT NULL UNIQUE,
   status         TEXT      NOT NULL,
-  brand          SERIAL REFERENCES brand (uid) ON DELETE CASCADE,
+  brand          SERIAL    NOT NULL REFERENCES brand (uid) ON DELETE CASCADE,
   average_rating SMALLINT  NOT NULL DEFAULT 0,
   name           TEXT,
   color          TEXT,

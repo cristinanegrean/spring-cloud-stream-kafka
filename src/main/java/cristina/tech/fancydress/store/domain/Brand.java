@@ -11,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "brand")
-@NoArgsConstructor(force = true) //Default C-tor needed by Jackson JSON.
+@NoArgsConstructor(force = true)
 @Data
 @EqualsAndHashCode(callSuper=true)
 public class Brand extends AbstractEntity {

@@ -6,9 +6,11 @@ import cristina.tech.fancydress.DressStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class Dress extends AbstractEntity {
     /**
      * Unique identifier of a dress, as of producer message sink/ingest, not the database ID.
      */
+    @NotEmpty
     private String id;
 
     @JsonIgnore
@@ -32,6 +35,7 @@ public class Dress extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "brand")
+    @NotNull
     private Brand brand;
 
     private String color;

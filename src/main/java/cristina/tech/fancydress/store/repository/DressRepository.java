@@ -9,7 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 @RepositoryRestResource(collectionResourceRel = "dresses", path = "dresses")
 public interface DressRepository extends PagingAndSortingRepository<Dress, Integer> {
@@ -17,15 +16,18 @@ public interface DressRepository extends PagingAndSortingRepository<Dress, Integ
     /**
      * Possibly replace Posgres aggregate function with Postgres window function dense_rank(),
      * see: <a href="https://www.postgresql.org/docs/9.5/static/functions-window.html"/>
+     * <p>
+     * Ordering done directly in native SQL based on ratings count.
      */
-    public static final String TRENDING_DRESSES_QUERY =
-            "select r.dress_id, count(r.rating_id) as ratingCount, d.* " +
+    String TRENDING_DRESSES_NATIVE_QUERY =
+            "select r.dress_id, count(r.rating_id), d.name, d.season, d.color, d.price, d.average_rating, " +
+                    "b.name as brandName " +
                     "from rating r inner join dress d " +
                     "on r.dress_id = d.id " +
                     "and r.event_time between :startDate and :endDate " +
-                    "inner join brand b " +
-                    "on d.brand = b.uid " +
-                    "group by r.dress_id, d.uid, d.price, d.name, d.season, d.color, d.average_rating, b.name order by count(r.rating_id) desc";
+                    "inner join brand b on d.brand = b.uid " +
+                    "group by r.dress_id, d.name, d.season, d.color, d.price, d.average_rating, b.name " +
+                    "order by count(r.rating_id) desc limit :topN";
 
     /**
      * Looks up dress by unique identifier, as assigned by producer, and not database ID.
@@ -42,8 +44,9 @@ public interface DressRepository extends PagingAndSortingRepository<Dress, Integ
      * @param endDate   time window end
      * @return most trending dresses page
      */
-    @Query(value = TRENDING_DRESSES_QUERY, nativeQuery = true)
-    CompletableFuture<List<Dress>> findMostRatedByTimeWindow(
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate);
+    @Query(value = TRENDING_DRESSES_NATIVE_QUERY, nativeQuery = true)
+    List<Object[]> findTopNTrendingByTimeWindow(
+            @Param("startDate") String startDate,
+            @Param("endDate") String endDate,
+            @Param("topN") Integer topN);
 }

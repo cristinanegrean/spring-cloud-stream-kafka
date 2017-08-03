@@ -54,6 +54,7 @@ ext {
 
 dependencies {
 	compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
+
     compile('org.springframework.boot:spring-boot-starter-actuator') //Production ready features to help you monitor and manage your application
     compile('org.springframework.boot:spring-boot-starter-data-jpa') //Java Persistence API including spring-data-jpa, spring-orm and Hibernate
     compile('org.springframework.boot:spring-boot-starter-data-rest') //Exposing Spring Data repositories over REST via spring-data-rest-webmvc
@@ -61,6 +62,7 @@ dependencies {
     compileOnly('org.projectlombok:lombok:1.16.16') //Gets rid of boiler plate code in Entity, POJOs, Data Objects
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
 
     runtime('org.springframework.data:spring-data-rest-hal-browser')  //Browsing Spring Data REST repositories in your browser
     runtime('org.postgresql:postgresql') //PostgreSQL jdbc driver
@@ -103,7 +105,7 @@ jacocoTestReport {
     }
 }
 
-// build.dependsOn jacocoTestReport // Un-comment this when ready
+build.dependsOn jacocoTestReport // Un-comment this when ready
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"

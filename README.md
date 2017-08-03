@@ -1,4 +1,4 @@
-## Fancy Dress Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates from a Python Producer and expose it via a REST API
+## Bootiful Dress Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates from a Python Producer and expose it via a REST API
 
 
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
@@ -6,14 +6,8 @@
 Demonstrated concepts:
 
 * Event Stream Processing
-![Streaming dress message events](stream_dress_message_event.png)
-![Streaming rating message events](stream_rating_message_event.png)
 * Handling out-of-order events
-![Streaming dress message events](stream_out_of_order_create_event.png)
-![Streaming rating message events](update_sink_before_create.png)
 * REST API to display consumed data, complete with paging and sorting
-![Dresses paging](dresses_paging.png)
-![Dresses endpoint](dresses_endpoint.png)
 * Windowing with out-of-order data, aggregation and lookup, using
 `count so far`. The timestamp used for windowing is the timestamp in the rating message event (event-time)
 

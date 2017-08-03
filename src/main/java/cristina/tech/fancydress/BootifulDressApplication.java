@@ -25,12 +25,12 @@ import org.springframework.scheduling.annotation.EnableAsync;
  */
 @SpringBootApplication
 @EntityScan(
-        basePackageClasses = { FancyDressApplication.class, Jsr310JpaConverters.class }
+        basePackageClasses = { BootifulDressApplication.class, Jsr310JpaConverters.class }
 )
 @EnableAsync
-public class FancyDressApplication {
+public class BootifulDressApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(FancyDressApplication.class, args);
+        SpringApplication.run(BootifulDressApplication.class, args);
     }
 }

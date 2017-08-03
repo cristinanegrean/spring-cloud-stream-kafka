@@ -5,27 +5,38 @@ server:
       port: 1000
 flyway:
   enabled: false
+h2:
+  console:
+    enabled: true
 ---
 spring:
   profiles: test
-  autoconfigure:
-    excludes: org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration
-  spring:
-    cloud:
-      stream:
-        bindings:
-          input:
-            destination: testTopic
-            group: testTopic-group
-            contentType: 'application/json'
-            consumer:
-              durableSubscription: true
-              headerMode: raw
-    jpa:
-      hibernate:
-        ddl-auto: create-drop
-    h2:
-      console: enabled
+  data:
+    rest:
+      detection-strategy: annotated
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  cloud:
+     stream:
+       bindings:
+         idresses:
+           destination: dresses
+           group: dresses-group
+           contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
+           consumer:
+             durableSubscription: true
+             headerMode: raw
+         iratings:
+           destination: ratings
+           group: ratings-group
+           contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
+           consumer:
+             durableSubscription: true
+             headerMode: raw
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
 logging:
   level:
     org:

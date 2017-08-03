@@ -28,7 +28,6 @@ spring:
       connectionTimeout: 1500
   data:
     rest:
-      base-path: /api
       detection-strategy: annotated
   jackson:
     serialization:
@@ -63,7 +62,6 @@ spring:
       connectionTimeout: 1500
   data:
     rest:
-      base-path: /api
       detection-strategy: annotated
   jackson:
     serialization:
