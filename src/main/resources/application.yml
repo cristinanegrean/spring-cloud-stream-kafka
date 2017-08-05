@@ -49,6 +49,10 @@ spring:
           consumer:
             durableSubscription: true
             headerMode: raw
+logging:
+  level:
+    cristina:
+      tech: debug
 ---
 spring:
   profiles: docker
@@ -88,3 +92,7 @@ spring:
             durableSubscription: true
             concurrency: 20
             headerMode: raw
+ logging:
+   level:
+     cristina:
+       tech: info

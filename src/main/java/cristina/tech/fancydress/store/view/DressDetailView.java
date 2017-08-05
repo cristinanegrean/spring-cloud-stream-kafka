@@ -3,7 +3,6 @@ package cristina.tech.fancydress.store.view;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,9 +11,8 @@ import java.math.BigInteger;
 
 @Data
 @JsonIgnoreProperties({"ratingsCount"})
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class TrendingDressView implements Serializable {
+public class DressDetailView implements Serializable {
 
     private static final long serialVersionUID = 4635410771215L;
 
@@ -27,8 +25,8 @@ public class TrendingDressView implements Serializable {
     private Integer averageRating;
     private String brandName;
 
-    public static final TrendingDressView map(Object[] objects) {
-        TrendingDressView view = new TrendingDressView();
+    public static final DressDetailView map(Object[] objects) {
+        DressDetailView view = new DressDetailView();
         view.setId((String) objects[0]);
         view.setRatingsCount((BigInteger) objects[1]);
         view.setName((String) objects[2]);

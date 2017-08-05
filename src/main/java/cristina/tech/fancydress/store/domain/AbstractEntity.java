@@ -14,17 +14,10 @@ import java.time.LocalDateTime;
 
 @MappedSuperclass
 @JsonIgnoreProperties({"createdAt", "modifiedAt"})
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public abstract class AbstractEntity implements Serializable {
 
     private static final long serialVersionUID = 1126074635410771212L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonTypeId
-    @Column(name = "uid")
-    protected Integer uid;
 
     @Column(name = "created_at")
     @CreatedDate

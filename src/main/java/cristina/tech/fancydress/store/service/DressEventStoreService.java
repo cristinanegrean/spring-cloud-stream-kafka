@@ -8,15 +8,20 @@ import cristina.tech.fancydress.store.repository.DressRepository;
 import cristina.tech.fancydress.store.repository.RatingRepository;
 import cristina.tech.fancydress.worker.event.DressEventType;
 import cristina.tech.fancydress.worker.event.DressMessageEvent;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 @Service
 @Transactional
+@Slf4j
 public class DressEventStoreService {
 
     @Autowired
@@ -29,22 +34,26 @@ public class DressEventStoreService {
     private RatingRepository ratingRepository;
 
     /**
-     * If producer sends 2 or more dress messages with status 'CREATED' and same dress id, data integrity check is
-     * enforced at the database level and subsequent messages (after 1st received and stored) will be rejected with error.
+     * Apply dress created or updated event, by saving it to persistent storage.
      *
      * @param dressMessageEvent any message comming from the idresses channel
+     * @return indicator flag if event has been applied, otherwise runtime exception is thrown
      */
     @Transactional
-    public void apply(DressMessageEvent dressMessageEvent) {
+    public boolean apply(DressMessageEvent dressMessageEvent) {
         Dress dress = fromDressMessageEvent(
                 dressMessageEvent, dressMessageEvent.getEventType() == DressEventType.CREATED);
-
-        if (dress != null) {
-            // set average rating, hence rating message event may have arrived
-            // before dress create or update message event
-            dress.setAverageRating(ratingRepository.getAverageRating(dress.getId()));
-            dressRepository.save(dress);
+        if (dress == null) {
+            return false;
         }
+
+        // set average rating, hence rating message event may have arrived
+        // before dress create or update message event
+        OptionalDouble averageRating = getAverageRating(dress.getUuid()); // attention database id is not generated yet
+        dress.setAverageRating(averageRating.isPresent() ? (int) Math.round(averageRating.getAsDouble()) : 0);
+        log.debug(String.format("Average rating for dress is: %d", dress.getAverageRating()));
+        dressRepository.save(dress);
+        return true;
     }
 
     @Transactional
@@ -53,14 +62,16 @@ public class DressEventStoreService {
             return null;
         }
 
+        // is dress persisted due to a previous CREATE or UPDATE event?
+        Optional<Dress> dressOptional = dressRepository.findById(dressMessageEvent.getPayloadKey());
+
         Dress dress;
-        if (isCreate) {
-            dress = new Dress(dressMessageEvent.getPayloadKey());
+        if (isCreate && dressOptional.isPresent()) {
+            // handle out-of-order, CREATE message arrived after UPDATED message has already been processed, skip CREATE
+            return null;
         } else {
-            // find dress to update
-            Optional<Dress> dressOptional = dressRepository.findById(dressMessageEvent.getPayloadKey());
             dress = dressOptional.isPresent() ? dressOptional.get() : new Dress(dressMessageEvent.getPayloadKey());
-            dress.setStatus(DressStatus.UPDATED);
+            dress.setStatus(isCreate ? DressStatus.CREATED : DressStatus.UPDATED);
         }
 
         dress.setName(dressMessageEvent.getPayload().getName());
@@ -100,6 +111,17 @@ public class DressEventStoreService {
         } else {
             return brandRepository.save(new Brand(eventBrand.getName(), eventBrand.getLogoUrl()));
         }
+    }
+
+    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
+    /**
+     * A mechanism to calculate the average for a dress based on the stored ratings and not relying on Postgres aggregate function
+     * as in {@link RatingRepository#getAverageRating(String)}
+     */
+    public OptionalDouble getAverageRating(String dressId) {
+        List<Integer> allStars = ratingRepository.listStarsByDressId(dressId);
+
+        return allStars.stream().mapToDouble(s -> s).average();
     }
 
 }

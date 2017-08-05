@@ -2,10 +2,12 @@ package cristina.tech.fancydress.store.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeId;
 import cristina.tech.fancydress.DressStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
 
@@ -24,10 +26,19 @@ public class Dress extends AbstractEntity {
     private static final long serialVersionUID = 9026074635410771215L;
 
     /**
-     * Unique identifier of a dress, as of producer message sink/ingest, not the database ID.
+     * Unique identifier of a dress, as of producer message sink/ingest, also the database ID.
      */
+    @Id
+    @Column(name = "id", unique=true, nullable=false)
+    @GeneratedValue(generator="customGenerator")
+    @GenericGenerator(name="customGenerator", strategy="cristina.tech.fancydress.store.domain.UseUUIDOrGenerate")
+    @JsonTypeId
     @NotEmpty
     private String id;
+
+    /** Python producer UUID as of payload key, used in {@link UseUUIDOrGenerate} to assign as database id when present */
+    @Transient
+    private String uuid;
 
     @JsonIgnore
     @Enumerated(EnumType.STRING)
@@ -49,12 +60,12 @@ public class Dress extends AbstractEntity {
     private BigDecimal price;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "dress_image", joinColumns = @JoinColumn(name = "dress_uid", referencedColumnName = "uid"))
+    @CollectionTable(name = "dress_image", joinColumns = @JoinColumn(name = "dress_id", referencedColumnName = "id"))
     @Column(name = "thumb_url")
     private List<String> thumbnails;
 
     public Dress(String id) {
-        this.id = id;
+        this.uuid = id;
     }
 
 }

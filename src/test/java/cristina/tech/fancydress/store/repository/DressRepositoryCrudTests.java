@@ -12,20 +12,18 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.validation.ConstraintViolationException;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class DressRepositoryTest {
+public class DressRepositoryCrudTests {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DressRepositoryTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DressRepositoryCrudTests.class);
 
     @Autowired
     private TestEntityManager entityManager; // alternative to JPA EntityManager designed for tests
@@ -42,14 +40,6 @@ public class DressRepositoryTest {
     private final static DateTimeFormatter formatter =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
-    @Test(expected = ConstraintViolationException.class)
-    public void saveInvalid() {
-        Dress dress = new Dress();
-
-        // null dress id, see  @Test(expected = ConstraintViolationException.class)
-        entityManager.persist(dress);
-    }
-
     @Test
     public void saveValid() {
         Dress dress = new Dress("one");
@@ -65,10 +55,15 @@ public class DressRepositoryTest {
         dress.setBrand(brand);
         entityManager.persist(dress);
 
-        Optional<Dress> dressById = dressRepository.findById(dress.getId());
-        assertThat(dressById.isPresent());
-        assertThat(dressById.get().getBrand()).isEqualTo(brand);
+        // check id has been assigned
+        assertThat(dress.getId()).isEqualTo("one");
 
+        Dress dressById = dressRepository.findOne("one");
+        assertThat(dressById.getBrand()).isEqualTo(brand);
+        assertThat(dressById.getAverageRating()).isEqualTo(0);
+        assertThat(dressById.getName()).isEqualTo("two");
+        assertThat(dressById.getColor()).isEqualTo("blue");
+        assertThat(dressById.getSeason()).isEqualTo("summer");
     }
 
     @Test
@@ -114,7 +109,7 @@ public class DressRepositoryTest {
         assertThat(ratingRepository.countRatingsByDressIdWithJoin("two")).isEqualTo(2);
 
 
-        String startDate =  now().minusMinutes(1).format(formatter);
+        String startDate = now().minusMinutes(1).format(formatter);
         String endDate = now().plusMinutes(1).format(formatter);
         LOGGER.info(String.format("Start date: %s, end date: %s",
                 startDate, endDate));

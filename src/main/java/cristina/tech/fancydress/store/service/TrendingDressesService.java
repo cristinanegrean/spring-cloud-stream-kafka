@@ -1,8 +1,7 @@
 package cristina.tech.fancydress.store.service;
 
-import cristina.tech.fancydress.store.controller.TrendingRestController;
 import cristina.tech.fancydress.store.repository.DressRepository;
-import cristina.tech.fancydress.store.view.TrendingDressView;
+import cristina.tech.fancydress.store.view.DressDetailView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class TrendingDressesService {
     private DressRepository dressRepository;
 
     @Transactional(readOnly = true)
-    public List<TrendingDressView> getTrending(int count) {
+    public List<DressDetailView> getTrending(int count) {
         // assert on count
         if (count == 0 || count > MAX_COUNT) {
             throw new IllegalArgumentException(COUNT_ERROR_MESSAGE);
@@ -49,6 +48,6 @@ public class TrendingDressesService {
 
         LOGGER.info(String.format("getTrending, count %d, start date %s, end date %s", count, startDate, endDate));
         return dressRepository.findTopNTrendingByTimeWindow(
-                startDate, endDate, count).stream().map(TrendingDressView::map).collect(toList());
+                startDate, endDate, count).stream().map(DressDetailView::map).collect(toList());
     }
 }

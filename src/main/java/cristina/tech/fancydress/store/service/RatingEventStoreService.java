@@ -13,6 +13,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
+import java.util.OptionalDouble;
 
 @Service
 @Transactional
@@ -24,17 +25,20 @@ public class RatingEventStoreService {
     @Autowired
     private DressRepository dressRepository;
 
+    @Autowired
+    private DressEventStoreService dressEventStoreService;
+
     /**
      * Saving orphan ratings is allowed for now, if dress with payload dress id is not found in DB yet.
      *
      * @param ratingMessageEvent any message comming from the iratings channel
      */
     @Transactional
-    public void apply(RatingMessageEvent ratingMessageEvent) {
+    public boolean apply(RatingMessageEvent ratingMessageEvent) {
         Rating rating = fromRatingMessageEvent(ratingMessageEvent);
 
         if (rating == null) {
-            return;
+            return false;
         }
 
         ratingRepository.save(rating);
@@ -44,9 +48,12 @@ public class RatingEventStoreService {
 
         if (dressOptional.isPresent()) { //yes, update the average stars aggregate field
             Dress dress = dressOptional.get();
-            dress.setAverageRating(ratingRepository.getAverageRating(dress.getId()));
+            OptionalDouble averageRating = dressEventStoreService.getAverageRating(dress.getId());
+            dress.setAverageRating(averageRating.isPresent() ? (int) Math.round(averageRating.getAsDouble()) : 0);
             dressRepository.save(dress);
         }
+
+        return true;
     }
 
     @Transactional

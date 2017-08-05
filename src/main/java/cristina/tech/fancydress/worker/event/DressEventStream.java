@@ -4,7 +4,6 @@ import cristina.tech.fancydress.store.service.DressEventStoreService;
 import cristina.tech.fancydress.store.service.RatingEventStoreService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.context.annotation.Profile;
@@ -16,9 +15,8 @@ import org.springframework.context.annotation.Profile;
  * Also see: spring.cloud.stream.bindings.idresses and spring.cloud.stream.bindings.iratings configurations
  * in application.yml.
  */
-@EnableAutoConfiguration
 @EnableBinding(DressInboundChannels.class)
-@Profile({"development", "docker"})
+@Profile({"development", "docker", "test"})
 @Slf4j
 public class DressEventStream {
 

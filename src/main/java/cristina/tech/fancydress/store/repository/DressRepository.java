@@ -6,12 +6,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @RepositoryRestResource(collectionResourceRel = "dresses", path = "dresses")
-public interface DressRepository extends PagingAndSortingRepository<Dress, Integer> {
+public interface DressRepository extends PagingAndSortingRepository<Dress, String> {
 
     /**
      * Possibly replace Posgres aggregate function with Postgres window function dense_rank(),
@@ -20,18 +19,19 @@ public interface DressRepository extends PagingAndSortingRepository<Dress, Integ
      * Ordering done directly in native SQL based on ratings count.
      */
     String TRENDING_DRESSES_NATIVE_QUERY =
-            "select r.dress_id, count(r.rating_id), d.name, d.season, d.color, d.price, d.average_rating, " +
+            "select r.dress_id, count(r.id), d.name, d.season, d.color, d.price, d.average_rating, " +
                     "b.name as brandName " +
                     "from rating r inner join dress d " +
                     "on r.dress_id = d.id " +
                     "and r.event_time between :startDate and :endDate " +
-                    "inner join brand b on d.brand = b.uid " +
+                    "inner join brand b on d.brand = b.id " +
                     "group by r.dress_id, d.name, d.season, d.color, d.price, d.average_rating, b.name " +
-                    "order by count(r.rating_id) desc limit :topN";
+                    "order by count(r.id) desc limit :topN";
 
     /**
-     * Looks up dress by unique identifier, as assigned by producer, and not database ID.
-     * Not to confuse with find by database id (uid), see {@link org.springframework.data.repository.CrudRepository#findOne(java.io.Serializable)}
+     * Looks up dress by unique identifier, as assigned by producer, also the database ID.
+     * Alternative to {@link org.springframework.data.repository.CrudRepository#findOne(java.io.Serializable)}
+     * BUT does not throw exception if Dress Entity is not found
      * This is the lookup by the dress identified assigned by the producer and is a text/string format.
      */
     Optional<Dress> findById(@Param("id") String id);
