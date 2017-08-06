@@ -27,12 +27,6 @@ public class TrendingDressesService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrendingDressesService.class);
 
-    /**
-     * for now hardcode temporal unit and duration, should be maybe supplied as param or
-     * refreshable config.
-     */
-    private static final Duration duration = Duration.of(1, ChronoUnit.HOURS);
-
     @Autowired
     private DressRepository dressRepository;
 
@@ -43,11 +37,11 @@ public class TrendingDressesService {
             throw new IllegalArgumentException(COUNT_ERROR_MESSAGE);
         }
 
-        String startDate = LocalDateTime.now().minusNanos(duration.toNanos()).format(formatter);
+        String startDate = LocalDateTime.now().minusMonths(1).format(formatter);
         String endDate = LocalDateTime.now().format(formatter);
 
         LOGGER.info(String.format("getTrending, count %d, start date %s, end date %s", count, startDate, endDate));
-        return dressRepository.findTopNTrendingByTimeWindow(
+        return dressRepository.findTopNTrendingTimeWindow(
                 startDate, endDate, count).stream().map(DressDetailView::map).collect(toList());
     }
 }

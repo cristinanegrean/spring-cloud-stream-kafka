@@ -21,7 +21,7 @@ public class TrendingRestController {
 
     @RequestMapping(value = "/trending")
     public List<DressDetailView> trending(@RequestParam(value="count", defaultValue="50") Integer count) {
-        LOGGER.info("Get top %d trending dresses detail", count);
+        LOGGER.info(String.format("Get top %d trending dresses detail", count));
         return trendingDressesService.getTrending(count);
     }
 }

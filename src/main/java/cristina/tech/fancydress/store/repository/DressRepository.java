@@ -9,7 +9,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import java.util.List;
 import java.util.Optional;
 
-@RepositoryRestResource(collectionResourceRel = "dresses", path = "dresses")
+@RepositoryRestResource(collectionResourceRel = "items", path = "dresses")
 public interface DressRepository extends PagingAndSortingRepository<Dress, String> {
 
     /**
@@ -38,14 +38,14 @@ public interface DressRepository extends PagingAndSortingRepository<Dress, Strin
 
     /**
      * Gets the most trending dresses as the dresses with most ratings (aggregate count)
-     * within a time window.
+     * within a time window. For tests as in-memory H2 database does not work well with Java8 LocalDateTime, that is the choice to use strings.
      *
      * @param startDate time window start
      * @param endDate   time window end
      * @return most trending dresses page
      */
     @Query(value = TRENDING_DRESSES_NATIVE_QUERY, nativeQuery = true)
-    List<Object[]> findTopNTrendingByTimeWindow(
+    List<Object[]> findTopNTrendingTimeWindow(
             @Param("startDate") String startDate,
             @Param("endDate") String endDate,
             @Param("topN") Integer topN);

@@ -38,10 +38,12 @@ services:
     image: spring-cloud-stream-kafka
     depends_on: # dress-datastore will be started before the fancy-dress-service
       - postgresdb
+      - kafka
     ports:
       - "9000:9000"
     links:
       - postgresdb
+      - kafka
     environment:
       #SPRING_PROFILES_ACTIVE: postgres
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgresdb:5432/postgres

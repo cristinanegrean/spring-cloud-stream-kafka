@@ -4,7 +4,6 @@ DROP TABLE IF EXISTS rating;
 DROP TABLE IF EXISTS dress;
 DROP TABLE IF EXISTS brand;
 
-
 CREATE TABLE brand (
   id          SERIAL    NOT NULL PRIMARY KEY,
   name        TEXT      NOT NULL UNIQUE,
@@ -16,7 +15,7 @@ CREATE TABLE brand (
 CREATE TABLE dress (
   id             TEXT      NOT NULL PRIMARY KEY,
   status         TEXT      NOT NULL,
-  brand          SERIAL    NOT NULL REFERENCES brand (uid) ON DELETE CASCADE,
+  brand          SERIAL    NOT NULL REFERENCES brand (id) ON DELETE CASCADE,
   average_rating SMALLINT  NOT NULL DEFAULT 0,
   name           TEXT,
   color          TEXT,
@@ -27,7 +26,7 @@ CREATE TABLE dress (
 );
 
 CREATE TABLE dress_image (
-  dress_id SERIAL REFERENCES dress (id) ON DELETE CASCADE,
+  dress_id TEXT REFERENCES dress (id) ON DELETE CASCADE,
   thumb_url TEXT
 );
 

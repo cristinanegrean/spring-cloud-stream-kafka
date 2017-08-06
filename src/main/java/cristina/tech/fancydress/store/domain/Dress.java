@@ -29,15 +29,18 @@ public class Dress extends AbstractEntity {
      * Unique identifier of a dress, as of producer message sink/ingest, also the database ID.
      */
     @Id
-    @Column(name = "id", unique=true, nullable=false)
-    @GeneratedValue(generator="customGenerator")
-    @GenericGenerator(name="customGenerator", strategy="cristina.tech.fancydress.store.domain.UseUUIDOrGenerate")
-    @JsonTypeId
+    @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(generator = "customGenerator")
+    @GenericGenerator(name = "customGenerator", strategy = "cristina.tech.fancydress.store.domain.UseUUIDOrGenerate")
     @NotEmpty
+    @JsonTypeId
     private String id;
 
-    /** Python producer UUID as of payload key, used in {@link UseUUIDOrGenerate} to assign as database id when present */
+    /**
+     * Python producer UUID as of payload key, used in {@link UseUUIDOrGenerate} to assign as database id when present
+     */
     @Transient
+    @JsonIgnore
     private String uuid;
 
     @JsonIgnore

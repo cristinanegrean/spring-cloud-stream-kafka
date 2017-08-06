@@ -116,7 +116,7 @@ public class DressRepositoryCrudTests {
 
         // assert find top N in 2 minutes window
         List<Object[]> trendingDresses =
-                dressRepository.findTopNTrendingByTimeWindow(startDate, endDate, 2);
+                dressRepository.findTopNTrendingTimeWindow(startDate, endDate, 2);
         assertThat(trendingDresses).hasSize(2);
 
         // assert ordering, dress 2 with 2 ratings on top, dress 1 with one rating on bottom
@@ -135,7 +135,7 @@ public class DressRepositoryCrudTests {
 
         // assert top N is filtering correctly the result set count
         trendingDresses =
-                dressRepository.findTopNTrendingByTimeWindow(startDate, endDate, 1);
+                dressRepository.findTopNTrendingTimeWindow(startDate, endDate, 1);
         assertThat(trendingDresses).hasSize(1);
 
     }
