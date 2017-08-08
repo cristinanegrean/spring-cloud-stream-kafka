@@ -1,0 +1,34 @@
+version: '2'
+services:
+  kafka:
+    container_name: kafka
+    image: spotify/kafka:latest
+    ports:
+      - 2181:2181
+      - 9092:9092
+    environment:
+      - ADVERTISED_HOST=192.168.99.100
+      - ADVERTISED_PORT=9092
+
+  postgresdb:
+    container_name: bootiful-dress-datastore
+    image: postgres:9.6.3
+    ports:
+         - "5432:5432"
+    environment:
+         - POSTGRES_USER=postgres
+         - POSTGRES_PASSWORD=demo
+    command: postgres
+
+  dress-service:
+    container_name: bootiful-dress-service
+    build: build/libs
+    image: spring-cloud-stream-kafka
+    depends_on: # dress-datastore will be started before the bootiful-dress-service
+      - postgresdb
+    ports:
+      - "9000:9000"
+    links:
+      - postgresdb
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker

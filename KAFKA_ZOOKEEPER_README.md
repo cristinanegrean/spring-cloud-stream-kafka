@@ -141,6 +141,7 @@ $ docker stop $(docker ps -a -q)
 
 
 ```
+$ docker stop $(docker ps -a -q)
 $ docker rm $(docker ps -a -q)
 $ docker rmi $(docker images -q)
 $ docker ps -a | grep "pattern" | awk '{print $3}' | xargs docker rmi

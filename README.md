@@ -50,7 +50,7 @@ $ ./gradlew clean build buildDocker
 Use Docker Compose tool and provided docker-compose-dev.yml file for bootstraping the multi-container application.
 
 ```
-docker compose -f docker-compose-dev.yml up
+docker-compose up
 ```
 
 #### When no Docker installed, on OS X follow below steps:

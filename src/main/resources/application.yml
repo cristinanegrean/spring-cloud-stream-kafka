@@ -57,10 +57,10 @@ spring:
 spring:
   profiles: docker
   datasource:
-    url: jdbc:postgresql://${DOCKER_IP:127.0.0.1}:5432/dresses
+    url: jdbc:postgresql://postgresdb:5432/postgres
     driverClassName: org.postgresql.Driver
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
+    username: postgres
+    password: demo
     hikari:
       maximumPoolSize: 10
       connectionTimeout: 1500
@@ -74,8 +74,8 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: ${DOCKER_IP:127.0.0.1}
-          zk-nodes: ${DOCKER_IP:127.0.0.1}
+          brokers: 192.168.99.100
+          zk-nodes: 192.168.99.100
       bindings:
         idresses:
           destination: dresses
