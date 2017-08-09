@@ -74,8 +74,8 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: 192.168.99.100
-          zk-nodes: 192.168.99.100
+          brokers: kafka
+          zkNodes: zookeeper
       bindings:
         idresses:
           destination: dresses

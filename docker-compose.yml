@@ -1,14 +1,25 @@
-version: '2'
+version: "2"
 services:
-  kafka:
-    container_name: kafka
-    image: spotify/kafka:latest
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    container_name: bootiful-dress-zookeeper
     ports:
       - 2181:2181
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: bootiful-dress-kafka
+    ports:
       - 9092:9092
     environment:
-      - ADVERTISED_HOST=192.168.99.100
-      - ADVERTISED_PORT=9092
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ADVERTISED_PORT=9092
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CREATE_TOPICS=dresses:1:1,ratings:1:1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    depends_on:
+      - zookeeper
 
   postgresdb:
     container_name: bootiful-dress-datastore
@@ -23,9 +34,10 @@ services:
   dress-service:
     container_name: bootiful-dress-service
     build: build/libs
-    image: spring-cloud-stream-kafka
-    depends_on: # dress-datastore will be started before the bootiful-dress-service
+    image: cristinatech/spring-cloud-stream-kafka
+    depends_on: # baking services will be started before the bootiful-dress-service
       - postgresdb
+      - kafka
     ports:
       - "9000:9000"
     links:

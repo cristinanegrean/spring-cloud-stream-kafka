@@ -13,8 +13,7 @@ Demonstrated concepts:
 `count so far`. The timestamp used for windowing is the timestamp in the rating message event (event-time)
 * See screenshots [here](https://github.com/cristinanegrean/spring-cloud-stream-kafka/tree/master/screenshots)
 
-![Architecture](architecture_overview.png)
-
+![Technologies Overview](service_overview.png)
 
 ### Technology stack used:
 * Mainstream programming language: [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
@@ -26,7 +25,8 @@ Demonstrated concepts:
 * [Hibernate Validator](http://hibernate.org/validator/), which is the reference implementation of [JSR 303/349 - Bean Validation 1.0/1.1 API] (http://beanvalidation.org/1.1/spec/)
 * [PostgreSQL 9.6.3](https://www.postgresql.org/) open-source datastore
 * [Spring Boot](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
-* [Docker](https://www.docker.com/docker-mac)
+* [Docker](https://www.docker.com/docker-mac) Least but not last, Docker is used to automate infrastructure (Want to get up-and-running fast and test the
+  dress streaming service, without having to install anything than Java 8, Docker and Python?)
 
 ### Bootstraping the service
 
@@ -45,12 +45,20 @@ $ ./gradlew clean build buildDocker
 
 2) Bootstrap Services: Kafka Zooker, Postres and the `Dress Consumer Service`
 
-#### Using Docker:
+#### Using Docker (simplest, thus recommended):
 
-Use Docker Compose tool and provided docker-compose-dev.yml file for bootstraping the multi-container application.
+Use Docker Compose tool and provided docker-compose.yml file for bootstraping the multi-container application.
 
 ```
-docker-compose up
+$ docker-compose up
+```
+
+You can check status of Zookeeper Server, Kafka, Postgres via connecting
+to the docker container, as bellow:
+
+```
+$ docker ps
+$ docker exec -i -t ${CONTAINER ID} bash
 ```
 
 #### When no Docker installed, on OS X follow below steps:
@@ -73,9 +81,6 @@ Also add aliases to start ZooKeeper, Kafka, Postgres server, to save on typing l
 ```
 export KAFKA_HOME=/opt/kafka_2.11-0.10.2.0
 export PATH=$PATH:$KAFKA_HOME
-
-export KAFKA_HOST_PORT=localhost:9092
-export DOCKER_IP=127.0.0.1
 
 export POSTGRES_USER=postgres
 export POSTGRES_PASSWORD=demo
@@ -101,6 +106,15 @@ The Apache Kafka distribution comes with default configuration files for both Zo
 $ zoostart
 ```
 
+You can check now that Zookeeper server is running correctly via previous
+configured alias commands:
+
+```
+$ zoostat
+$ zoomntr
+$ zooenvi
+```
+
 2.5) Then start Apache Kafka, in a new terminal window:
 
 ```
@@ -113,17 +127,29 @@ $ kafkastart
 $ java -jar build/libs/spring-cloud-stream-kafka-1.0.0-SNAPSHOT.jar
 ```
 
-3) Start the Producer Python Script that produces data for `dresses` and `dress ratings` on two different Kafka topics named `dresses` and `ratings` (this is hard coded). The script reads an environment variable named `KAFKA_HOST_PORT` to discover the Kafka broker server to connect to.
+3) Start the Producer Python Script that produces data for `dresses` and `dress ratings` on two different Kafka topics named `dresses` and `ratings` (this is hard coded).
 
-Python requirements installation on OS X:
+The script reads an environment variable named `KAFKA_HOST_PORT` to discover the Kafka broker server to connect to and falls back to
+`localhost:9092`
+
+When running services via Docker, you'l need add the host name "kafka" and its corresponding IP in /etc/hosts, as below:
+
+```
+127.0.0.1       kafka
+```
+
+Python requirements installationon OS X:
 
 ```
 $ brew install python3
+$ brew link python3
+$ python3 -m ensurepip
 ```
 
 Edit `.bash_profile`:
 
 ```
+export KAFKA_HOST_PORT=localhost:9092
 export PYTHON_HOME=/usr/local/bin/python3
 export PATH=$PATH:$PYTHON_HOME
 ```
