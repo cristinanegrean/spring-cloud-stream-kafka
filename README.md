@@ -4,6 +4,9 @@
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
 
+Blog posts:
+* http://cristina.tech/2017/08/09/dresses-stream-processing-and-kafka
+
 Demonstrated concepts:
 
 * Event Stream Processing
@@ -132,13 +135,13 @@ $ java -jar build/libs/spring-cloud-stream-kafka-1.0.0-SNAPSHOT.jar
 The script reads an environment variable named `KAFKA_HOST_PORT` to discover the Kafka broker server to connect to and falls back to
 `localhost:9092`
 
-When running services via Docker, you'l need add the host name "kafka" and its corresponding IP in /etc/hosts, as below:
+When running services via Docker, you'll need add the host name "kafka" and its corresponding IP in /etc/hosts, as below:
 
 ```
 127.0.0.1       kafka
 ```
 
-Python requirements installationon OS X:
+Python requirements installation on OS X:
 
 ```
 $ brew install python3
