@@ -201,7 +201,7 @@ Example message:
 }
 ```
 
-The `eventType` field tells you whether the message contains a creation or a update of a dress using the values `CREATED` or `UPDATED` respectively. The `payload_key` will always have the same value as the `id` field of the contained dress.
+The `status` field tells you whether the message contains a creation or a update of a dress using the values `CREATED` or `UPDATED` respectively. The `payload_key` will always have the same value as the `id` field of the contained dress.
 
 ##### Rating message format
 Example message:
