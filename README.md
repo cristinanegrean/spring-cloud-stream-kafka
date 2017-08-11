@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
 
 Blog posts:
-* http://cristina.tech/2017/08/09/dresses-stream-processing-and-kafka
+* http://cristina.tech/2017/08/09/dresses-stream-processing-and-apache-kafka
 
 Demonstrated concepts:
 

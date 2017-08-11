@@ -83,6 +83,7 @@ spring:
           contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
           consumer:
             durableSubscription: true
+            concurrency: 20
             headerMode: raw
         iratings:
           destination: ratings
