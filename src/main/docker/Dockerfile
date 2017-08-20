@@ -17,6 +17,10 @@ ADD spring-cloud-stream-kafka-1.0.0-SNAPSHOT.jar app.jar
 
 #Expose Tomcat HTTP Port, by default 8080, overriden to server.port=9000
 EXPOSE 9000
+#Expose Management HTTP Port for non sensitive endpoints: health and flyway
+EXPOSE 8081
+# Treat the container like a remote server, expose JPDA Transport address
+EXPOSE 5005
 
 # You can use a RUN command to "touch" the jar file so that it has a file modification time
 # (Docker creates all container files in an "unmodified" state by default)

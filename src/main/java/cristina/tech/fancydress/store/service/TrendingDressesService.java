@@ -2,16 +2,10 @@ package cristina.tech.fancydress.store.service;
 
 import cristina.tech.fancydress.store.repository.DressRepository;
 import cristina.tech.fancydress.store.view.DressDetailView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -20,28 +14,12 @@ import static java.util.stream.Collectors.toList;
 @Transactional(readOnly = true)
 public class TrendingDressesService {
 
-    private static final int MAX_COUNT = 50;
-    private static final String COUNT_ERROR_MESSAGE = "Trending list count param should be min 1 or max 50";
-    private final static DateTimeFormatter formatter =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrendingDressesService.class);
-
     @Autowired
     private DressRepository dressRepository;
 
     @Transactional(readOnly = true)
-    public List<DressDetailView> getTrending(int count) {
-        // assert on count
-        if (count == 0 || count > MAX_COUNT) {
-            throw new IllegalArgumentException(COUNT_ERROR_MESSAGE);
-        }
-
-        String startDate = LocalDateTime.now().minusMonths(1).format(formatter);
-        String endDate = LocalDateTime.now().format(formatter);
-
-        LOGGER.info(String.format("getTrending, count %d, start date %s, end date %s", count, startDate, endDate));
-        return dressRepository.findTopNTrendingTimeWindow(
-                startDate, endDate, count).stream().map(DressDetailView::map).collect(toList());
+    public List<DressDetailView> getTrending(int count, String interval) {
+        return dressRepository.findTopNTrendingTimeInterval(count, interval)
+                .stream().map(DressDetailView::map).collect(toList());
     }
 }

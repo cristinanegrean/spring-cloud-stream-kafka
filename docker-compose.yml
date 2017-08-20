@@ -40,7 +40,10 @@ services:
       - kafka
     ports:
       - "9000:9000"
+      - "8081:8081"
+      - "5005:5005"
     links:
       - postgresdb
-    environment:
+    environment: # docker run -e "SPRING_PROFILES_ACTIVE=docker -e "JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n" -p 9000:9000 -p 8081:8081 -p 5005:5005 -t cristinatech/spring-cloud-stream-kafka
       - SPRING_PROFILES_ACTIVE=docker
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,address=5005

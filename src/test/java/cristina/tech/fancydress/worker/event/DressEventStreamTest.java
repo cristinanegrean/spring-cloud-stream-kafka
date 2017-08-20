@@ -3,7 +3,6 @@ package cristina.tech.fancydress.worker.event;
 import cristina.tech.fancydress.BootifulDressApplication;
 import cristina.tech.fancydress.store.repository.BrandRepository;
 import cristina.tech.fancydress.store.repository.DressRepository;
-import cristina.tech.fancydress.store.repository.RatingRepository;
 import cristina.tech.fancydress.store.service.DressEventStoreService;
 import cristina.tech.fancydress.store.service.RatingEventStoreService;
 import cristina.tech.fancydress.worker.domain.Brand;
@@ -21,7 +20,7 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * Test in isolation {@DressEventStream} by using Mockito.
+ * Test in isolation {@link DressEventStream} by using Mockito.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = BootifulDressApplication.class)
@@ -35,9 +34,6 @@ public class DressEventStreamTest {
 
     @MockBean
     private DressRepository dressRepository;
-
-    @MockBean
-    private RatingRepository ratingRepository;
 
     @MockBean
     private BrandRepository brandRepository;

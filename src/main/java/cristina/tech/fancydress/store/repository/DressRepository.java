@@ -18,15 +18,25 @@ public interface DressRepository extends PagingAndSortingRepository<Dress, Strin
      * <p>
      * Ordering done directly in native SQL based on ratings count.
      */
-    String TRENDING_DRESSES_NATIVE_QUERY =
+    String TRENDING_DRESSES_NATIVE_QUERY_START =
             "select r.dress_id, count(r.id), d.name, d.season, d.color, d.price, d.average_rating, " +
                     "b.name as brandName " +
                     "from rating r inner join dress d " +
-                    "on r.dress_id = d.id " +
-                    "and r.event_time between :startDate and :endDate " +
-                    "inner join brand b on d.brand = b.id " +
+                    "on r.dress_id = d.id ";
+    String EVENT_TIME_WINDOW = "and r.event_time between :startDate and :endDate ";
+    String EVENT_TIME_INTERVAL = "and age(r.event_time) < cast(:interval AS interval) ";
+    String TRENDING_DRESSES_NATIVE_QUERY_END =
+            "inner join brand b on d.brand = b.id " +
                     "group by r.dress_id, d.name, d.season, d.color, d.price, d.average_rating, b.name " +
                     "order by count(r.id) desc limit :topN";
+
+
+    String TRENDING_DRESSES_NATIVE_QUERY_H2 =
+            TRENDING_DRESSES_NATIVE_QUERY_START + EVENT_TIME_WINDOW + (TRENDING_DRESSES_NATIVE_QUERY_END);
+
+    String TRENDING_DRESSES_NATIVE_QUERY =
+            TRENDING_DRESSES_NATIVE_QUERY_START + EVENT_TIME_INTERVAL + (TRENDING_DRESSES_NATIVE_QUERY_END);
+
 
     /**
      * Looks up dress by unique identifier, as assigned by producer, also the database ID.
@@ -44,9 +54,15 @@ public interface DressRepository extends PagingAndSortingRepository<Dress, Strin
      * @param endDate   time window end
      * @return most trending dresses page
      */
-    @Query(value = TRENDING_DRESSES_NATIVE_QUERY, nativeQuery = true)
+    @Query(value = TRENDING_DRESSES_NATIVE_QUERY_H2, nativeQuery = true)
     List<Object[]> findTopNTrendingTimeWindow(
             @Param("startDate") String startDate,
             @Param("endDate") String endDate,
             @Param("topN") Integer topN);
+
+    @Query(value = TRENDING_DRESSES_NATIVE_QUERY, nativeQuery = true)
+    List<Object[]> findTopNTrendingTimeInterval(
+            @Param("topN") Integer topN,
+            @Param("interval") String interval);
+
 }

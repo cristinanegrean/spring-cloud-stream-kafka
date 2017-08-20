@@ -22,10 +22,10 @@ public class DressDetailView implements Serializable {
     private String name;
     private String season;
     private String color;
-    private Integer averageRating;
+    private Short averageRating;
     private String brandName;
 
-    public static final DressDetailView map(Object[] objects) {
+    public static DressDetailView map(Object[] objects) {
         DressDetailView view = new DressDetailView();
         view.setId((String) objects[0]);
         view.setRatingsCount((BigInteger) objects[1]);
@@ -33,7 +33,7 @@ public class DressDetailView implements Serializable {
         view.setSeason((String) objects[3]);
         view.setColor((String) objects[4]);
         view.setPrice((BigDecimal) objects[5]);
-        view.setAverageRating((Integer) objects[6]);
+        view.setAverageRating((Short) objects[6]);
         view.setBrandName((String) objects[7]);
 
         return view;

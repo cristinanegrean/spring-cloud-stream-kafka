@@ -62,7 +62,7 @@ public class RatingRepositoryCrudTests {
         assertThat(ratingRepository.getAverageRating(DRESS_TWO)).isEqualTo(0);
     }
 
-    private static final LocalDateTime now() {
+    private static LocalDateTime now() {
         return LocalDateTime.now();
     }
 }
