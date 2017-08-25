@@ -75,7 +75,9 @@ public class BootifulDressIntegrationTests {
     }
 
     @Test
-    /** Dress Repository is annotated as a {@link org.springframework.data.rest.core.annotation.RestResource}. */
+    /**
+     * Dress Repository is annotated as a {@link org.springframework.data.rest.core.annotation.RestResource}.
+     */
     public void dressesRepositoryExposedAsRestResource() {
         // setup API response type to be a Dress HTTP Resource
         ParameterizedTypeReference<Resource<Dress>> responseType = new ParameterizedTypeReference<Resource<Dress>>() {
@@ -97,7 +99,9 @@ public class BootifulDressIntegrationTests {
     }
 
     @Test
-    /** Stream, store a DressMessageEvent. Browse the dress as a HTTP Resource. */
+    /**
+     * Stream, store a DressMessageEvent. Browse the dress as a HTTP Resource.
+     */
     public void streamStoreBrowseDress() {
         // send a test dress message event to stream listener component
         this.dressInboundChannels.idresses().send(new GenericMessage<>(getDressMessageEvent(TEST_DRESS_ONE)));
@@ -200,7 +204,7 @@ public class BootifulDressIntegrationTests {
         assertThat(HttpStatus.NOT_FOUND.value()).isEqualTo(brandsUri.getStatusCode().value());
     }
 
-    private static final DressMessageEvent getDressMessageEvent(String dressId) {
+    private static DressMessageEvent getDressMessageEvent(String dressId) {
         DressMessageEvent createDressEvent = new DressMessageEvent();
         createDressEvent.setStatus(DressStatus.CREATED);
         createDressEvent.setPayloadKey(dressId);
@@ -220,7 +224,7 @@ public class BootifulDressIntegrationTests {
         return createDressEvent;
     }
 
-    private static final RatingMessageEvent getRatingMessageEvent(String dressId) {
+    private static RatingMessageEvent getRatingMessageEvent(String dressId) {
         RatingMessageEvent dressRatedEvent = new RatingMessageEvent();
         dressRatedEvent.setPayloadKey(TEST_RATING_ID);
         cristina.tech.fancydress.worker.domain.Rating rating = new cristina.tech.fancydress.worker.domain.Rating();
