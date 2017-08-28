@@ -1,1 +1,0 @@
-ALTER TABLE rating ALTER COLUMN event_time SET DATA TYPE timestamp without time zone;

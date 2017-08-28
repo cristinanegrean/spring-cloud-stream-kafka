@@ -6,6 +6,7 @@
 
 Blog posts:
 * http://cristina.tech/2017/08/09/dresses-stream-processing-and-apache-kafka
+* http://cristina.tech/2017/08/28/testing-a-spring-cloud-stream-microservice
 
 Demonstrated concepts:
 
