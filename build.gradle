@@ -12,6 +12,7 @@ buildscript {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1") //Send coverage data to coveralls.io
         classpath('se.transmode.gradle:gradle-docker:1.2') //Build a Docker Image with Gradle
+        classpath('org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2') //Integrate with SonarQube
     }
 }
 
@@ -24,6 +25,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'docker'
+apply plugin: 'org.sonarqube'
 
 jar {
     baseName = 'spring-cloud-stream-kafka'
