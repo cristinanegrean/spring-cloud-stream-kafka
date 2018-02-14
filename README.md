@@ -3,6 +3,7 @@
 
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
+[![BCH compliance](https://bettercodehub.com/edge/badge/cristinanegrean/spring-cloud-stream-kafka?branch=master)](https://bettercodehub.com/)
 
 Blog posts:
 * http://cristina.tech/2017/08/09/dresses-stream-processing-and-apache-kafka
