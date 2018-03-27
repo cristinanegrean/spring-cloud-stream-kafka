@@ -36,7 +36,7 @@ public class DressEventStoreService {
     /**
      * Apply dress created or updated event, by saving it to persistent storage.
      *
-     * @param dressMessageEvent any message comming from the idresses channel
+     * @param dressMessageEvent any message coming from the idresses channel
      * @return indicator flag if event has been applied, otherwise runtime exception is thrown
      */
     @Transactional
@@ -56,7 +56,6 @@ public class DressEventStoreService {
         return true;
     }
 
-    @Transactional
     private Dress fromDressMessageEvent(DressMessageEvent dressMessageEvent, boolean isCreate) {
         if (dressMessageEvent == null || dressMessageEvent.getPayloadKey() == null) {
             return null;
@@ -65,20 +64,18 @@ public class DressEventStoreService {
         // is dress persisted due to a previous CREATE or UPDATE event?
         Optional<Dress> dressOptional = dressRepository.findById(dressMessageEvent.getPayloadKey());
 
-        Dress dress;
         if (isCreate && dressOptional.isPresent()) {
             // handle out-of-order, CREATE message arrived after UPDATED message has already been processed, skip CREATE
             return null;
-        } else {
-            dress = dressOptional.isPresent() ? dressOptional.get() : new Dress(dressMessageEvent.getPayloadKey());
-            dress.setStatus(isCreate ? DressStatus.CREATED : DressStatus.UPDATED);
         }
+
+        Dress dress = dressOptional.orElseGet(() -> new Dress(dressMessageEvent.getPayloadKey(), fromDressMessageEvent(dressMessageEvent.getPayload().getBrand())));
+        dress.setStatus(isCreate ? DressStatus.CREATED : DressStatus.UPDATED);
 
         dress.setName(dressMessageEvent.getPayload().getName());
         dress.setSeason(dressMessageEvent.getPayload().getSeason());
         dress.setPrice(dressMessageEvent.getPayload().getPrice());
         dress.setColor(dressMessageEvent.getPayload().getColor());
-        dress.setBrand(fromDressMessageEvent(dressMessageEvent.getPayload().getBrand()));
 
         // any image thumbnails?
         if (dressMessageEvent.getPayload().getImages() != null) {
@@ -86,7 +83,7 @@ public class DressEventStoreService {
                     i -> {
                         if (dress.getThumbnails() == null) { // init
                             dress.setThumbnails(new ArrayList<>());
-                        } else if (!isCreate && dress.getThumbnails() != null && dress.getThumbnails().size() > 0) {
+                        } else if (!isCreate && dress.getThumbnails() != null && !dress.getThumbnails().isEmpty()) {
                             // when updating dress, current message thumbs will overwrite old ones
                             dress.getThumbnails().clear();
                         }
@@ -98,7 +95,6 @@ public class DressEventStoreService {
         return dress;
     }
 
-    @Transactional
     private Brand fromDressMessageEvent(cristina.tech.fancydress.worker.domain.Brand eventBrand) {
         if (eventBrand == null) {
             return null;
@@ -106,18 +102,15 @@ public class DressEventStoreService {
 
         // does brand already exist?
         Optional<Brand> brandOptional = brandRepository.findByName(eventBrand.getName());
-        if (brandOptional.isPresent()) {
-            return brandOptional.get(); // found one by unique name
-        } else {
-            return brandRepository.save(new Brand(eventBrand.getName(), eventBrand.getLogoUrl()));
-        }
+        // found one by unique name
+        return brandOptional.orElseGet(() -> brandRepository.save(new Brand(eventBrand.getName(), eventBrand.getLogoUrl())));
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     /**
      * A mechanism to calculate the average for a dress based on the stored ratings and not relying on Postgres aggregate function
      * as in {@link RatingRepository#getAverageRating(String)}
      */
+    @Transactional(readOnly = true, isolation = Isolation.READ_UNCOMMITTED)
     public OptionalDouble getAverageRating(String dressId) {
         List<Integer> allStars = ratingRepository.listStarsByDressId(dressId);
 

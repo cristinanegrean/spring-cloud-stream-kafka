@@ -18,6 +18,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -42,15 +43,15 @@ public class DressRepositoryCrudTests {
 
     @Test
     public void saveValid() {
-        Dress dress = new Dress("one");
-        dress.setName("two");
-        dress.setColor("blue");
-        dress.setSeason("summer");
-
         Brand brand = new Brand("dressy", "https://dressy.logo");
         entityManager.persist(brand);
 
-        assertThat(brandRepository.findByName(brand.getName()).isPresent());
+        assertTrue(brandRepository.findByName(brand.getName()).isPresent());
+
+        Dress dress = new Dress("one", brand);
+        dress.setName("two");
+        dress.setColor("blue");
+        dress.setSeason("summer");
 
         dress.setBrand(brand);
         entityManager.persist(dress);
@@ -71,12 +72,10 @@ public class DressRepositoryCrudTests {
         Brand brand = new Brand("vintage", "http://vintage.com");
         entityManager.persist(brand);
 
-        Dress dress1 = new Dress("one");
+        Dress dress1 = new Dress("one", brand);
         dress1.setName("mini");
-        dress1.setBrand(brand);
-        Dress dress2 = new Dress("two");
+        Dress dress2 = new Dress("two", brand);
         dress2.setName("maxi");
-        dress2.setBrand(brand);
 
         // no out-of-order data here, dress data arrives first
         entityManager.persist(dress1);
@@ -140,7 +139,7 @@ public class DressRepositoryCrudTests {
 
     }
 
-    private static final LocalDateTime now() {
+    private static LocalDateTime now() {
         return LocalDateTime.now();
     }
 

@@ -50,6 +50,7 @@ public class Rating extends AbstractEntity {
     public Rating(String ratingId, String dressId) {
         this.uuid = ratingId;
         this.dressId = dressId;
+        this.stars = 0;
     }
 
 }

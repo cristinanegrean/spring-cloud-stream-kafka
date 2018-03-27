@@ -4,6 +4,7 @@
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
 [![BCH compliance](https://bettercodehub.com/edge/badge/cristinanegrean/spring-cloud-stream-kafka?branch=master)](https://bettercodehub.com/)
+![Sonar Cloud](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=alert_status)
 
 Blog posts:
 * http://cristina.tech/2017/08/09/dresses-stream-processing-and-apache-kafka
@@ -48,7 +49,7 @@ Build and run tests. And the Docker image of the SpringBoot microservice. Note G
 $ ./gradlew clean build buildDocker
 ```
 
-2) Bootstrap Services: Kafka Zooker, Postres and the `Dress Consumer Service`
+2) Bootstrap Services: Kafka Zookeeper, Postgres and the `Dress Consumer Service`
 
 #### Using Docker (simplest, thus recommended):
 

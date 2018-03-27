@@ -33,7 +33,10 @@ public class TrendingRestController {
     public List<DressDetailView> trending(
             @RequestParam(value="count", defaultValue=COUNT_DEFAULT) Integer count,
             @RequestParam(value="interval", defaultValue=INTERVAL_DEFAULT) String interval) {
-        LOGGER.info(String.format("Get top %d trending dresses detail over time window of %s", count, interval));
+
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info(String.format("Get top %d trending dresses detail over time window of %s", count, interval));
+        }
 
         // validate user input count
         if (count == 0 || count > Integer.valueOf(COUNT_DEFAULT)) {

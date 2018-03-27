@@ -56,7 +56,6 @@ public class RatingEventStoreService {
         return true;
     }
 
-    @Transactional
     private Rating fromRatingMessageEvent(RatingMessageEvent ratingMessageEvent) {
         if (ratingMessageEvent == null || ratingMessageEvent.getPayload() == null) {
             return null;

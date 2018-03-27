@@ -72,7 +72,7 @@ public class DressEventStreamTest {
         dressMessageEvent.setPayload(dress);
 
         cristina.tech.fancydress.store.domain.Brand storedBrand = new cristina.tech.fancydress.store.domain.Brand(brand.getName(), null);
-        cristina.tech.fancydress.store.domain.Dress dressToBeUpdated = new cristina.tech.fancydress.store.domain.Dress(dress.getId());
+        cristina.tech.fancydress.store.domain.Dress dressToBeUpdated = new cristina.tech.fancydress.store.domain.Dress(dress.getId(), storedBrand);
         when(dressRepository.findById(dressMessageEvent.getPayloadKey())).thenReturn(Optional.of(dressToBeUpdated));
         when(brandRepository.findByName(brand.getName())).thenReturn(Optional.of(storedBrand));
         when(dressEventStoreService.apply(dressMessageEvent)).thenReturn(true);

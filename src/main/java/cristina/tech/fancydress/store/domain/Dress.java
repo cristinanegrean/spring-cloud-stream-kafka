@@ -67,8 +67,9 @@ public class Dress extends AbstractEntity {
     @Column(name = "thumb_url")
     private List<String> thumbnails;
 
-    public Dress(String id) {
+    public Dress(String id, Brand brand) {
         this.uuid = id;
+        this.brand = brand;
     }
 
 }

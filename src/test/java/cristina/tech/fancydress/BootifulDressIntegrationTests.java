@@ -30,6 +30,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpMethod.GET;
 
 /**
@@ -113,7 +114,7 @@ public class BootifulDressIntegrationTests {
      */
     private void assertDressStored(String dressId, int expectedAverageRating) {
         Optional<Dress> storeOptionalDress = dressRepository.findById(dressId);
-        assertThat(storeOptionalDress.isPresent());
+        assertTrue(storeOptionalDress.isPresent());
         assertThat(storeOptionalDress.get().getId()).isEqualTo(dressId);
         assertThat(ratingRepository.getAverageRating(dressId)).isEqualTo(expectedAverageRating);
         assertThat(storeOptionalDress.get().getAverageRating()).isEqualTo(expectedAverageRating);

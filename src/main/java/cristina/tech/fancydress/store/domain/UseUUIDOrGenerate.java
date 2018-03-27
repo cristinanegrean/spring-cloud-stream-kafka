@@ -1,6 +1,6 @@
 package cristina.tech.fancydress.store.domain;
 
-import org.hibernate.HibernateException;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.id.IdentityGenerator;
 import org.slf4j.Logger;
@@ -14,20 +14,20 @@ import java.io.Serializable;
  * Using UUID given in the Producer payload as payload key for Entity database ID, when possible, otherwise rely
  * on identity generation.
  */
+@Slf4j
 public class UseUUIDOrGenerate extends IdentityGenerator {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UseUUIDOrGenerate.class);
 
     private static final String TRANSIENT_PRODUCER_UUID_PROPERTY_NAME = "uuid";
 
     @Override
-    public Serializable generate(SessionImplementor session, Object object)
-            throws HibernateException {
+    public Serializable generate(SessionImplementor session, Object object) {
 
         Serializable id = session.getEntityPersister(null, object).getClassMetadata().getIdentifier(object, session);
 
         if (id != null) {
-            LOGGER.debug(String.format("Found entity id %s", id));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Found entity id %s", id));
+            }
             return id;
         }
 
@@ -40,11 +40,13 @@ public class UseUUIDOrGenerate extends IdentityGenerator {
         }
 
         if (uuid != null) {
-            LOGGER.debug(String.format("No entity id, found and using producer uuid %s as entity id", uuid));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("No entity id, found and using producer uuid %s as entity id", uuid));
+            }
             return uuid;
         }
 
-        LOGGER.debug("No entity id or producer uuid found, generating one");
+        log.debug("No entity id or producer uuid found, generating one");
 
         return super.generate(session, object);
     }
