@@ -15,7 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
-@@Slf4j
+@Slf4j
 public class TrendingRestController {
     
     private static final String INTERVAL_DEFAULT = "30 second";
