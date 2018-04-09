@@ -8,7 +8,6 @@
 ![SonarQube Relialibily Rating](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=reliability_rating)
 ![SonarQube Cloud Security Rating](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=security_rating)
 ![SonarQube Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=ncloc)
-![SonarQube Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=ncloc)
 ![SonarQube Duplication](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=duplicated_lines_density)
 
 Blog posts:
