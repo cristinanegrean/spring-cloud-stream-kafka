@@ -3,8 +3,6 @@ package cristina.tech.fancydress.store.domain;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.id.IdentityGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
 
@@ -25,9 +23,7 @@ public class UseUUIDOrGenerate extends IdentityGenerator {
         Serializable id = session.getEntityPersister(null, object).getClassMetadata().getIdentifier(object, session);
 
         if (id != null) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("Found entity id %s", id));
-            }
+            log.debug("Found entity id {0}", id);
             return id;
         }
 
@@ -40,9 +36,7 @@ public class UseUUIDOrGenerate extends IdentityGenerator {
         }
 
         if (uuid != null) {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("No entity id, found and using producer uuid %s as entity id", uuid));
-            }
+            log.debug("No entity id, found and using producer uuid {0} as entity id", uuid);
             return uuid;
         }
 
@@ -52,5 +46,3 @@ public class UseUUIDOrGenerate extends IdentityGenerator {
     }
 
 }
-
-
