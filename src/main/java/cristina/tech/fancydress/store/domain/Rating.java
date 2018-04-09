@@ -51,6 +51,7 @@ public class Rating extends AbstractEntity {
         this.uuid = ratingId;
         this.dressId = dressId;
         this.stars = 0;
+        eventTime = LocalDateTime.now();
     }
 
 }
