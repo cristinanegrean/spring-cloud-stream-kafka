@@ -99,6 +99,13 @@ jacoco {
     toolVersion = "0.7.9"
 }
 
+sonarqube {
+    properties {
+      property "sonar.sources", "src/main/java/"
+      property "sonar.projectKey", "cristinatech:spring-cloud-stream-kafka"
+    }
+}
+
 test {
     jacoco {
         append = false
