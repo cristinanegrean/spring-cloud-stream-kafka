@@ -4,7 +4,12 @@
 ![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
 [![BCH compliance](https://bettercodehub.com/edge/badge/cristinanegrean/spring-cloud-stream-kafka?branch=master)](https://bettercodehub.com/)
-[![Sonar Cloud](https://sonarcloud.io/api/badges/gate?key=cristinatech%3Aspring-cloud-stream-kafka)](https://sonarcloud.io/dashboard/index/cristinatech%3Aspring-cloud-stream-kafka)
+[![SonarQube Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=sqale_rating)
+![SonarQube Relialibily Rating](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=reliability_rating)
+![SonarQube Cloud Security Rating](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=security_rating)
+![SonarQube Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=ncloc)
+![SonarQube Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=ncloc)
+![SonarQube Duplication](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=duplicated_lines_density)
 
 Blog posts:
 * http://cristina.tech/2017/08/09/dresses-stream-processing-and-apache-kafka
