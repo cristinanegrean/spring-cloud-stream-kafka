@@ -13,5 +13,4 @@ services:
   - docker
 
 script:
-  - ./gradlew clean build buildDocker coveralls
-  - sonar-scanner
+  - ./gradlew clean build buildDocker coveralls sonarqube
