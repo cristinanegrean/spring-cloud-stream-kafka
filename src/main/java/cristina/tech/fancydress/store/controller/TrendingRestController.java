@@ -2,8 +2,7 @@ package cristina.tech.fancydress.store.controller;
 
 import cristina.tech.fancydress.store.service.TrendingDressesService;
 import cristina.tech.fancydress.store.view.DressDetailView;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,7 @@ import java.util.regex.Pattern;
 
 @RestController
 public class TrendingRestController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(TrendingRestController.class);
+    
     private static final String INTERVAL_DEFAULT = "30 second";
     private static final String COUNT_DEFAULT = "50";
     private static final String COUNT_ERROR_MESSAGE = "Trending list count param should be min 1 or max 50";
@@ -34,9 +32,7 @@ public class TrendingRestController {
             @RequestParam(value="count", defaultValue=COUNT_DEFAULT) Integer count,
             @RequestParam(value="interval", defaultValue=INTERVAL_DEFAULT) String interval) {
 
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(String.format("Get top %d trending dresses detail over time window of %s", count, interval));
-        }
+        log.info("Get top {0} trending dresses detail over time window of {1}", count, interval);
 
         // validate user input count
         if (count == 0 || count > Integer.valueOf(COUNT_DEFAULT)) {
