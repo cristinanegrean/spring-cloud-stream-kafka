@@ -1,7 +1,7 @@
 package cristina.tech.fancydress.store.domain;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentityGenerator;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.PropertyAccessorFactory;
@@ -18,7 +18,7 @@ public class UseUUIDOrGenerate extends IdentityGenerator {
     private static final String TRANSIENT_PRODUCER_UUID_PROPERTY_NAME = "uuid";
 
     @Override
-    public Serializable generate(SessionImplementor session, Object object) {
+    public Serializable generate(SharedSessionContractImplementor session, Object object) {
 
         Serializable id = session.getEntityPersister(null, object).getClassMetadata().getIdentifier(object, session);
 

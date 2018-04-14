@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.6.RELEASE'
+        springBootVersion = '2.0.1.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -22,6 +22,7 @@ group = 'cristinatech'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'docker'
@@ -50,28 +51,32 @@ repositories {
 }
 
 ext {
-    springCloudVersion = 'Dalston.SR2'
+    springCloudVersion = 'Finchley.M9'
 }
 
 dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
 
-    compile('org.springframework.boot:spring-boot-starter-actuator')
     //Production ready features to help you monitor and manage your application
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+
     //Java Persistence API including spring-data-jpa, spring-orm and Hibernate
-    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
     //Exposing Spring Data repositories over REST via spring-data-rest-webmvc
-    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+
     //Instruct Jackson JSON serializer/deserializer to work with Java 8 Date & Time API
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
 
     compileOnly('org.projectlombok:lombok:1.16.16') //Gets rid of boiler plate code in Entity, POJOs, Data Objects
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
 
-    runtime('org.springframework.data:spring-data-rest-hal-browser')
     //Browsing Spring Data REST repositories in your browser
+    runtime('org.springframework.data:spring-data-rest-hal-browser')
+
     runtime('org.postgresql:postgresql') //PostgreSQL jdbc driver
     runtime('com.zaxxer:HikariCP') //high-performance, production-quality JDBC connection pool
     runtime('org.flywaydb:flyway-core') //Flyway Database Migrations library
@@ -86,7 +91,7 @@ dependencyManagement {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5.1'
+    gradleVersion = '4.2.1'
 }
 
 task fatJar(type: Jar) {
@@ -96,7 +101,7 @@ task fatJar(type: Jar) {
 }
 
 jacoco {
-    toolVersion = "0.7.9"
+    toolVersion = "0.8.1"
 }
 
 sonarqube {
@@ -114,12 +119,15 @@ test {
 }
 
 jacocoTestReport {
+    def coverageSourceDirs = ['src/main/java']
     reports {
-        xml.enabled true
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
     }
+    sourceDirectories = files(coverageSourceDirs)
 }
 
-build.dependsOn jacocoTestReport // Un-comment this when ready
+build.dependsOn jacocoTestReport
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"

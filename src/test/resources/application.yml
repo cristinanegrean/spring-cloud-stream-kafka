@@ -1,10 +1,10 @@
 spring:
   profiles:
     active: test
+  flyway:
+    enabled: false
 server:
       port: 1000
-flyway:
-  enabled: false
 h2:
   console:
     enabled: true

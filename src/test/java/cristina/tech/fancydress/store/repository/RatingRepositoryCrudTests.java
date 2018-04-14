@@ -9,8 +9,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -27,9 +29,9 @@ public class RatingRepositoryCrudTests {
 
     @Test
     public void saveValid() {
-        Rating rating1 = new Rating("1st rating", DRESS_ONE);
-        Rating rating2 = new Rating("2nd rating", DRESS_ONE);
-        Rating rating3 = new Rating("3rd rating", DRESS_ONE);
+        Rating rating1 = new Rating("1", DRESS_ONE);
+        Rating rating2 = new Rating("2", DRESS_ONE);
+        Rating rating3 = new Rating("3", DRESS_ONE);
 
         rating1.setEventTime(now());
         rating2.setEventTime(now());
@@ -44,12 +46,12 @@ public class RatingRepositoryCrudTests {
         entityManager.persist(rating3);
 
         // check entity id generation uses uuid and entity content
-        Rating rating1Store = ratingRepository.findOne("1st rating");
-        assertThat(rating1Store).isNotNull();
-        assertThat(rating1Store.getId()).isEqualTo("1st rating");
-        assertThat(rating1Store.getDressId()).isEqualTo(DRESS_ONE);
-        assertThat(rating1Store.getStars()).isEqualTo(4);
-        assertThat(rating1Store.getEventTime()).isNotNull();
+        Optional<Rating> rating1Store = ratingRepository.findById("1");
+        assertTrue(rating1Store.isPresent());
+        assertThat(rating1Store.get().getId()).isEqualTo("1");
+        assertThat(rating1Store.get().getDressId()).isEqualTo(DRESS_ONE);
+        assertThat(rating1Store.get().getStars()).isEqualTo(4);
+        assertThat(rating1Store.get().getEventTime()).isNotNull();
 
         // check 3 ratings found in DB
         assertThat(ratingRepository.count()).isEqualTo(3);
