@@ -50,7 +50,7 @@ $ cd spring-cloud-stream-kafka
 Build and run tests. And the Docker image of the SpringBoot microservice. Note Gradle local installation is not required, as project is shipping the [Gradle Wrapper](https://docs.gradle.org/3.3/userguide/gradle_wrapper.html)
 
 ```
-$ ./gradlew clean build buildDocker
+$ ./gradlew clean build docker
 ```
 
 2) Bootstrap Services: Kafka Zookeeper, Postgres and the `Dress Consumer Service`
@@ -234,8 +234,7 @@ Unlike dresses, ratings are never updated.
 #### Miscelaneous:
 
 * [Project Lombok](https://projectlombok.org/) has been used to get rid of boiler plate code as getters, setters, no argument constructors in Entity, POJOs, Data Objects.
-* Application health endpoint, non-sensitive: http://localhost:8081/admin/health
-* Fancy dress service is using [Flyway](https://flywaydb.org/) to evolve the
-`dresses` DB schema. Schema version is available using the non-sensitive admin
- endpoint: http://localhost:8081/admin/flyway or from the psql console
+* Application health endpoint, non-sensitive: http://localhost:8081/admin/actuator/health
+* Fancy dress service is using [Flyway](https://flywaydb.org/) to evolve the `dresses` DB schema. Schema version is available using the non-sensitive admin
+ endpoint: http://localhost:8081/admin/actuator/flyway or from the psql console
 
