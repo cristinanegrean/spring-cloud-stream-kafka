@@ -1,8 +1,9 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.1.RELEASE'
+        springBootVersion = '2.0.2.RELEASE'
     }
     repositories {
+        jcenter()
         mavenCentral()
         maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://repo.spring.io/milestone" }
@@ -11,13 +12,10 @@ buildscript {
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1") //Send coverage data to coveralls.io
-        classpath('se.transmode.gradle:gradle-docker:1.2') //Build a Docker Image with Gradle
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0') //Build a Docker Image with Gradle
         classpath('org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2') //Integrate with SonarQube
     }
 }
-
-//Docker image name (or tag) is set up from the jar file properties: cristinatech/spring-cloud-stream-kafka
-group = 'cristinatech'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -25,20 +23,15 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'docker'
+apply plugin: 'com.palantir.docker'
 apply plugin: 'org.sonarqube'
 
-jar {
-    baseName = 'spring-cloud-stream-kafka'
-    version = '1.0.0-SNAPSHOT'
-}
+//Docker image name (or tag) is set up from the jar file properties: cristinatech/spring-cloud-stream-kafka
+group = 'cristinatech'
 
-// copy the DockerFile into the build/libs folder
-build.doLast() {
-    copy {
-        from 'src/main/docker'
-        into 'build/libs'
-    }
+bootJar {
+    baseName = 'spring-cloud-stream-kafka'
+    version = '1.0.0'
 }
 
 sourceCompatibility = 1.8
@@ -51,7 +44,7 @@ repositories {
 }
 
 ext {
-    springCloudVersion = 'Finchley.M9'
+    springCloudVersion = 'Finchley.RC1'
 }
 
 dependencies {
@@ -137,15 +130,9 @@ tasks.coveralls {
     onlyIf { System.env.'CI' }
 }
 
-task buildDocker(type: Docker, dependsOn: build) {
-    push = false
-    applicationName = jar.baseName
-    dockerfile = file('src/main/docker/Dockerfile')
-    doFirst {
-        copy {
-            from jar
-            into stageDir
-        }
-    }
+docker {
+    dependsOn build
+    name "${project.group}/${bootJar.baseName}"
+    files bootJar.archivePath
+    buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
 }
-

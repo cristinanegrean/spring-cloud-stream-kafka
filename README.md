@@ -1,7 +1,7 @@
 ## Bootiful Dress Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates from a Python Producer and expose it via a REST API
 
 
-![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
+[![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka)
 [![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
 [![BCH compliance](https://bettercodehub.com/edge/badge/cristinanegrean/spring-cloud-stream-kafka?branch=master)](https://bettercodehub.com/)
 ![SonarQube Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=sqale_rating)
@@ -34,7 +34,7 @@ Demonstrated concepts:
 * [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
 * [Hibernate Validator](http://hibernate.org/validator/), which is the reference implementation of [JSR 303/349 - Bean Validation 1.0/1.1 API] (http://beanvalidation.org/1.1/spec/)
 * [PostgreSQL 9.6.3](https://www.postgresql.org/) open-source datastore
-* [Spring Boot](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
+* [Spring Boot 2](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
 * [Docker](https://www.docker.com/docker-mac) Least but not last, Docker is used to automate infrastructure (Want to get up-and-running fast and test the
   dress streaming service, without having to install anything than Java 8, Docker and Python?)
 
