@@ -33,9 +33,6 @@ spring:
   data:
     rest:
       detection-strategy: annotated
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
     stream:
       bindings:
@@ -46,7 +43,6 @@ spring:
           consumer:
             durableSubscription: true
             concurrency: 10
-            headerMode: raw
         iratings:
           destination: ratings
           concurrency: 10
@@ -54,6 +50,7 @@ spring:
           content-type: application/json
           consumer:
             durableSubscription: true
+            concurrency: 10
 ---
 spring:
   profiles: docker
@@ -68,9 +65,6 @@ spring:
   data:
     rest:
       detection-strategy: annotated
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
     stream:
       kafka:
