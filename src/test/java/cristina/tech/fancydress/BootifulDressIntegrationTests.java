@@ -40,15 +40,15 @@ import static org.springframework.http.HttpMethod.GET;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = BootifulDressApplication.class)
 public class BootifulDressIntegrationTests {
 
-    private static final String TEST_DRESS_ONE = "test-dress-one";
-    private static final String TEST_DRESS_TWO = "test-dress-two";
+    private static final String TEST_DRESS_ONE = "1";
+    private static final String TEST_DRESS_TWO = "2";
     private static final String TEST_BRAND = "perfectly basics";
     private static final String TEST_SEASON = "all-around-year-no-seasonality";
     private static final String TEST_COLOR = "blue-crush";
     private static final String TEST_NAME = "pyjama dress";
     private static final BigDecimal TEST_PRICE = new BigDecimal(10.99);
 
-    private static final String TEST_RATING_ID = "test-rating-id";
+    private static final String TEST_RATING_ID = "5";
     private static final int TEST_RATING_STARS = 3;
 
     @Autowired
@@ -97,9 +97,10 @@ public class BootifulDressIntegrationTests {
         this.dressInboundChannels.idresses().send(new GenericMessage<>(getDressMessageEvent(TEST_DRESS_TWO)));
 
         // assert rating is stored
-        Rating rating = ratingRepository.findOne(TEST_RATING_ID);
-        assertThat(rating.getStars()).isEqualTo(TEST_RATING_STARS);
-        assertNotNull(rating.getEventTime());
+        Optional<Rating> rating = ratingRepository.findById(TEST_RATING_ID);
+        assertTrue(rating.isPresent());
+        assertThat(rating.get().getStars()).isEqualTo(TEST_RATING_STARS);
+        assertNotNull(rating.get().getEventTime());
 
         // assert that dress is stored, check that service call updated automatically average rating
         assertDressStored(TEST_DRESS_TWO, TEST_RATING_STARS);
@@ -135,9 +136,12 @@ public class BootifulDressIntegrationTests {
 
         // assert response on client rest template exchange
         assertThat(dressUriSearch.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertNotNull(dressUriSearch.getHeaders().getContentType());
         assertThat(dressUriSearch.getHeaders().getContentType().toString()).isEqualTo("application/hal+json;charset=UTF-8");
 
         // assert body matches dress message event details
+        assertNotNull(dressUriSearch.getBody());
+        assertNotNull(dressUriSearch.getBody().getContent());
         assertThat(dressUriSearch.getBody().getContent().getBrand().getName()).isEqualTo(TEST_BRAND);
         assertThat(dressUriSearch.getBody().getContent().getName()).isEqualTo(TEST_NAME);
         assertThat(dressUriSearch.getBody().getContent().getSeason()).isEqualTo(TEST_SEASON);
@@ -164,9 +168,11 @@ public class BootifulDressIntegrationTests {
 
         // assert response on client rest template exchange
         assertThat(dressesUri.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
+        assertNotNull(dressesUri.getHeaders().getContentType());
         assertThat(dressesUri.getHeaders().getContentType().toString()).isEqualTo("application/hal+json;charset=UTF-8");
 
         // assert body is empty, contains no persisted dress items
+        assertNotNull(dressesUri.getBody().getContent());
         assertNull(dressesUri.getBody().getContent().getId());
     }
 

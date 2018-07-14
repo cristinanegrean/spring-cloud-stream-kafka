@@ -5,8 +5,6 @@ import cristina.tech.fancydress.store.domain.Dress;
 import cristina.tech.fancydress.store.domain.Rating;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -16,6 +14,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -23,8 +22,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class DressRepositoryCrudTests {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DressRepositoryCrudTests.class);
 
     @Autowired
     private TestEntityManager entityManager; // alternative to JPA EntityManager designed for tests
@@ -59,12 +56,13 @@ public class DressRepositoryCrudTests {
         // check id has been assigned
         assertThat(dress.getId()).isEqualTo("one");
 
-        Dress dressById = dressRepository.findOne("one");
-        assertThat(dressById.getBrand()).isEqualTo(brand);
-        assertThat(dressById.getAverageRating()).isEqualTo(0);
-        assertThat(dressById.getName()).isEqualTo("two");
-        assertThat(dressById.getColor()).isEqualTo("blue");
-        assertThat(dressById.getSeason()).isEqualTo("summer");
+        Optional<Dress> dressById = dressRepository.findById("one");
+        assertTrue(dressById.isPresent());
+        assertThat(dressById.get().getBrand()).isEqualTo(brand);
+        assertThat(dressById.get().getAverageRating()).isEqualTo(0);
+        assertThat(dressById.get().getName()).isEqualTo("two");
+        assertThat(dressById.get().getColor()).isEqualTo("blue");
+        assertThat(dressById.get().getSeason()).isEqualTo("summer");
     }
 
     @Test
@@ -72,9 +70,9 @@ public class DressRepositoryCrudTests {
         Brand brand = new Brand("vintage", "http://vintage.com");
         entityManager.persist(brand);
 
-        Dress dress1 = new Dress("one", brand);
+        Dress dress1 = new Dress("1", brand);
         dress1.setName("mini");
-        Dress dress2 = new Dress("two", brand);
+        Dress dress2 = new Dress("2", brand);
         dress2.setName("maxi");
 
         // no out-of-order data here, dress data arrives first
@@ -82,9 +80,9 @@ public class DressRepositoryCrudTests {
         entityManager.persist(dress2);
 
         // rating data arrives
-        Rating rating1dress1 = new Rating("one", "one");
-        Rating rating2dress2 = new Rating("two", "two");
-        Rating rating3dress2 = new Rating("three", "two");
+        Rating rating1dress1 = new Rating("1", "1");
+        Rating rating2dress2 = new Rating("2", "2");
+        Rating rating3dress2 = new Rating("3", "2");
 
         rating1dress1.setStars(5);
         rating1dress1.setEventTime(now());
@@ -104,14 +102,12 @@ public class DressRepositoryCrudTests {
         assertThat(ratingRepository.count()).isEqualTo(3);
 
         // check links
-        assertThat(ratingRepository.countRatingsByDressIdWithJoin("one")).isEqualTo(1);
-        assertThat(ratingRepository.countRatingsByDressIdWithJoin("two")).isEqualTo(2);
+        assertThat(ratingRepository.countRatingsByDressIdWithJoin("1")).isEqualTo(1);
+        assertThat(ratingRepository.countRatingsByDressIdWithJoin("2")).isEqualTo(2);
 
 
         String startDate = now().minusMinutes(1).format(formatter);
         String endDate = now().plusMinutes(1).format(formatter);
-        LOGGER.info(String.format("Start date: %s, end date: %s",
-                startDate, endDate));
 
         // assert find top N in 2 minutes window
         List<Object[]> trendingDresses =
@@ -122,12 +118,12 @@ public class DressRepositoryCrudTests {
         Object[] top1DressDetails = trendingDresses.get(0);
         Object[] top2DressDetails = trendingDresses.get(1);
 
-        assertThat(top1DressDetails[0]).isEqualTo("two"); // dress id
+        assertThat(top1DressDetails[0]).isEqualTo("2"); // dress id
         assertThat(top1DressDetails[1]).isEqualTo(BigInteger.valueOf(2L));  // dress ratings count
         assertThat(top1DressDetails[2]).isEqualTo("maxi"); // dress name
         assertThat(top1DressDetails[7]).isEqualTo("vintage"); // dress brand name
 
-        assertThat(top2DressDetails[0]).isEqualTo("one");
+        assertThat(top2DressDetails[0]).isEqualTo("1");
         assertThat(top2DressDetails[1]).isEqualTo(BigInteger.valueOf(1L));
         assertThat(top2DressDetails[2]).isEqualTo("mini");
         assertThat(top2DressDetails[7]).isEqualTo("vintage");

@@ -33,7 +33,7 @@ services:
 
   dress-service:
     container_name: bootiful-dress-service
-    build: build/libs
+    build: build/docker
     image: cristinatech/spring-cloud-stream-kafka
     depends_on: # baking services will be started before the bootiful-dress-service
       - postgresdb

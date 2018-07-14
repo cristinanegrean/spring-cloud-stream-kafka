@@ -1,7 +1,7 @@
 ## Bootiful Dress Service: AMQP-driven event processor to consume data for dresses and ratings domain aggregates from a Python Producer and expose it via a REST API
 
 
-![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)
+[![Build Status](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka.svg?branch=master)](https://travis-ci.org/cristinanegrean/spring-cloud-stream-kafka)
 [![Coverage Status](https://coveralls.io/repos/github/cristinanegrean/spring-cloud-stream-kafka/badge.svg?branch=master)](https://coveralls.io/github/cristinanegrean/spring-cloud-stream-kafka?branch=master)
 [![BCH compliance](https://bettercodehub.com/edge/badge/cristinanegrean/spring-cloud-stream-kafka?branch=master)](https://bettercodehub.com/)
 ![SonarQube Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=sqale_rating)
@@ -10,9 +10,11 @@
 ![SonarQube Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=ncloc)
 ![SonarQube Duplication](https://sonarcloud.io/api/project_badges/measure?project=cristinatech%3Aspring-cloud-stream-kafka&metric=duplicated_lines_density)
 
-Blog posts:
+Blog posts that were written when project code was based on [Spring Cloud Daltson](https://spring.io/blog/2017/04/12/spring-cloud-dalston-released) release train, [Spring Boot 1.5.6.RELEASE](https://spring.io/blog/2017/07/27/spring-boot-1-5-6-available-now) and [Spring Cloud Stream Chelsea.SR2](https://github.com/spring-cloud/spring-cloud-stream-starters/releases/tag/vChelsea.SR2)
 * http://cristina.tech/2017/08/09/dresses-stream-processing-and-apache-kafka
 * http://cristina.tech/2017/08/28/testing-a-spring-cloud-stream-microservice
+
+Project code base has been upgraded to [Spring Cloud Finchley.RELEASE](https://github.com/spring-projects/spring-cloud/wiki/Spring-Cloud-Finchley-Release-Notes), [Spring Boot 2.0.3.RELEASE](https://spring.io/blog/2018/06/14/spring-boot-2-0-3-available-now) and [Spring Cloud Stream Elmhurst.RELEASE](https://spring.io/blog/2018/04/10/announcing-general-availability-of-spring-cloud-stream-elmhurst-release-2-0-0-release). The Spring profile for Docker is pulling Apache Kafka and Zookeeper container images from [DockerHub](https://hub.docker.com/u/wurstmeister/).
 
 Demonstrated concepts:
 
@@ -34,7 +36,7 @@ Demonstrated concepts:
 * [Spring Data JPA](http://projects.spring.io/spring-data-jpa/)
 * [Hibernate Validator](http://hibernate.org/validator/), which is the reference implementation of [JSR 303/349 - Bean Validation 1.0/1.1 API] (http://beanvalidation.org/1.1/spec/)
 * [PostgreSQL 9.6.3](https://www.postgresql.org/) open-source datastore
-* [Spring Boot](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
+* [Spring Boot 2](http://projects.spring.io/spring-boot/): helps assembling a DevOps friendly, self-runnable uber-fat-jar of the autonomous consumer microservice application
 * [Docker](https://www.docker.com/docker-mac) Least but not last, Docker is used to automate infrastructure (Want to get up-and-running fast and test the
   dress streaming service, without having to install anything than Java 8, Docker and Python?)
 
@@ -50,7 +52,7 @@ $ cd spring-cloud-stream-kafka
 Build and run tests. And the Docker image of the SpringBoot microservice. Note Gradle local installation is not required, as project is shipping the [Gradle Wrapper](https://docs.gradle.org/3.3/userguide/gradle_wrapper.html)
 
 ```
-$ ./gradlew clean build buildDocker
+$ ./gradlew clean build docker
 ```
 
 2) Bootstrap Services: Kafka Zookeeper, Postgres and the `Dress Consumer Service`
@@ -235,7 +237,6 @@ Unlike dresses, ratings are never updated.
 
 * [Project Lombok](https://projectlombok.org/) has been used to get rid of boiler plate code as getters, setters, no argument constructors in Entity, POJOs, Data Objects.
 * Application health endpoint, non-sensitive: http://localhost:8081/admin/health
-* Fancy dress service is using [Flyway](https://flywaydb.org/) to evolve the
-`dresses` DB schema. Schema version is available using the non-sensitive admin
+* Fancy dress service is using [Flyway](https://flywaydb.org/) to evolve the `dresses` DB schema. Schema version is available using the non-sensitive admin
  endpoint: http://localhost:8081/admin/flyway or from the psql console
 

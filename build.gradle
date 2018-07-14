@@ -1,8 +1,9 @@
 buildscript {
     ext {
-        springBootVersion = '1.5.6.RELEASE'
+        springBootVersion = '2.0.3.RELEASE'
     }
     repositories {
+        jcenter()
         mavenCentral()
         maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://repo.spring.io/milestone" }
@@ -10,34 +11,27 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1") //Send coverage data to coveralls.io
-        classpath('se.transmode.gradle:gradle-docker:1.2') //Build a Docker Image with Gradle
+        classpath("org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2") //Send coverage data to coveralls.io
+        classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.20.1') //Build a Docker Image with Gradle
         classpath('org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2') //Integrate with SonarQube
     }
 }
 
-//Docker image name (or tag) is set up from the jar file properties: cristinatech/spring-cloud-stream-kafka
-group = 'cristinatech'
-
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
-apply plugin: 'docker'
+apply plugin: 'com.palantir.docker'
 apply plugin: 'org.sonarqube'
 
-jar {
-    baseName = 'spring-cloud-stream-kafka'
-    version = '1.0.0-SNAPSHOT'
-}
+//Docker image name (or tag) is set up from the jar file properties: cristinatech/spring-cloud-stream-kafka
+group = 'cristinatech'
 
-// copy the DockerFile into the build/libs folder
-build.doLast() {
-    copy {
-        from 'src/main/docker'
-        into 'build/libs'
-    }
+bootJar {
+    baseName = 'spring-cloud-stream-kafka'
+    version = '1.2.0-SNAPSHOT'
 }
 
 sourceCompatibility = 1.8
@@ -50,28 +44,32 @@ repositories {
 }
 
 ext {
-    springCloudVersion = 'Dalston.SR2'
+    springCloudVersion = 'Finchley.RELEASE'
 }
 
 dependencies {
     compile('org.springframework.cloud:spring-cloud-starter-stream-kafka')
 
-    compile('org.springframework.boot:spring-boot-starter-actuator')
     //Production ready features to help you monitor and manage your application
-    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+
     //Java Persistence API including spring-data-jpa, spring-orm and Hibernate
-    compile('org.springframework.boot:spring-boot-starter-data-rest')
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+
     //Exposing Spring Data repositories over REST via spring-data-rest-webmvc
-    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
+    compile('org.springframework.boot:spring-boot-starter-data-rest')
+
     //Instruct Jackson JSON serializer/deserializer to work with Java 8 Date & Time API
+    compile('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
 
     compileOnly('org.projectlombok:lombok:1.16.16') //Gets rid of boiler plate code in Entity, POJOs, Data Objects
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.cloud:spring-cloud-stream-test-support')
 
-    runtime('org.springframework.data:spring-data-rest-hal-browser')
     //Browsing Spring Data REST repositories in your browser
+    runtime('org.springframework.data:spring-data-rest-hal-browser')
+
     runtime('org.postgresql:postgresql') //PostgreSQL jdbc driver
     runtime('com.zaxxer:HikariCP') //high-performance, production-quality JDBC connection pool
     runtime('org.flywaydb:flyway-core') //Flyway Database Migrations library
@@ -86,7 +84,7 @@ dependencyManagement {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5.1'
+    gradleVersion = '4.2.1'
 }
 
 task fatJar(type: Jar) {
@@ -96,7 +94,7 @@ task fatJar(type: Jar) {
 }
 
 jacoco {
-    toolVersion = "0.7.9"
+    toolVersion = "0.8.1"
 }
 
 sonarqube {
@@ -114,12 +112,15 @@ test {
 }
 
 jacocoTestReport {
+    def coverageSourceDirs = ['src/main/java']
     reports {
-        xml.enabled true
+        html.enabled = true // human readable
+        xml.enabled = true // required by coveralls
     }
+    sourceDirectories = files(coverageSourceDirs)
 }
 
-build.dependsOn jacocoTestReport // Un-comment this when ready
+build.dependsOn jacocoTestReport
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
@@ -129,15 +130,9 @@ tasks.coveralls {
     onlyIf { System.env.'CI' }
 }
 
-task buildDocker(type: Docker, dependsOn: build) {
-    push = false
-    applicationName = jar.baseName
-    dockerfile = file('src/main/docker/Dockerfile')
-    doFirst {
-        copy {
-            from jar
-            into stageDir
-        }
-    }
+docker {
+    dependsOn build
+    name "${project.group}/${bootJar.baseName}"
+    files bootJar.archivePath
+    buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
 }
-

@@ -1,10 +1,10 @@
 spring:
   profiles:
     active: test
+  flyway:
+    enabled: false
 server:
       port: 1000
-flyway:
-  enabled: false
 h2:
   console:
     enabled: true
@@ -14,26 +14,21 @@ spring:
   data:
     rest:
       detection-strategy: annotated
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
      stream:
        bindings:
          idresses:
            destination: dresses
            group: dresses-group
-           contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
+           content-type: application/json
            consumer:
              durableSubscription: true
-             headerMode: raw
          iratings:
            destination: ratings
            group: ratings-group
-           contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
+           content-type: application/json
            consumer:
              durableSubscription: true
-             headerMode: raw
   jpa:
     hibernate:
       ddl-auto: create-drop

@@ -1,24 +1,24 @@
 spring:
   profiles:
     active: development
+  flyway:
+    enabled: true
+    validate-on-migrate: false
+    baseline-on-migrate: true
 server:
     port: 9000
 management:
-  port: 8081
-  context-path: /admin
-flyway:
-  enabled: true
-  validate-on-migrate: false
-  baseline-on-migrate: true
-endpoints:
-  health:
-    sensitive: false
-  flyway:
-    sensitive: false
+  endpoints:
+    enabled-by-default: true
+    web.exposure.include: health,flyway,metrics
+  server:
+    port: 8081
+    servlet:
+      context-path: /admin
 logging:
   level:
-    cristina:
-      tech: debug
+    cristina.tech: debug
+    org.hibernate.engine.jdbc.env.internal.LobCreatorBuilderImpl: error
 ---
 spring:
   profiles: development
@@ -33,28 +33,24 @@ spring:
   data:
     rest:
       detection-strategy: annotated
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
     stream:
       bindings:
         idresses:
           destination: dresses
           group: dresses-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
+          contentType: application/json
           consumer:
             durableSubscription: true
             concurrency: 10
-            headerMode: raw
         iratings:
           destination: ratings
           concurrency: 10
           group: ratings-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
+          content-type: application/json
           consumer:
             durableSubscription: true
-            headerMode: raw
+            concurrency: 10
 ---
 spring:
   profiles: docker
@@ -69,29 +65,23 @@ spring:
   data:
     rest:
       detection-strategy: annotated
-  jackson:
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
   cloud:
     stream:
       kafka:
         binder:
           brokers: kafka
-          zkNodes: zookeeper
       bindings:
         idresses:
           destination: dresses
           group: dresses-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
+          contentType: application/json
           consumer:
             durableSubscription: true
             concurrency: 20
-            headerMode: raw
         iratings:
           destination: ratings
           group: ratings-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
+          contentType: application/json
           consumer:
             durableSubscription: true
             concurrency: 20
-            headerMode: raw
