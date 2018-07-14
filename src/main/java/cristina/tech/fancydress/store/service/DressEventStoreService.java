@@ -8,7 +8,6 @@ import cristina.tech.fancydress.store.repository.DressRepository;
 import cristina.tech.fancydress.store.repository.RatingRepository;
 import cristina.tech.fancydress.worker.event.DressEventType;
 import cristina.tech.fancydress.worker.event.DressMessageEvent;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -21,7 +20,6 @@ import java.util.OptionalDouble;
 
 @Service
 @Transactional
-@Slf4j
 public class DressEventStoreService {
 
     @Autowired
@@ -51,7 +49,6 @@ public class DressEventStoreService {
         // before dress create or update message event
         OptionalDouble averageRating = getAverageRating(dress.getUuid()); // attention database id is not generated yet
         dress.setAverageRating(averageRating.isPresent() ? (int) Math.round(averageRating.getAsDouble()) : 0);
-        log.debug(String.format("Average rating for dress is: %d", dress.getAverageRating()));
         dressRepository.save(dress);
         return true;
     }

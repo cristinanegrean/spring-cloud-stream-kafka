@@ -42,7 +42,7 @@ spring:
         idresses:
           destination: dresses
           group: dresses-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
+          contentType: application/json
           consumer:
             durableSubscription: true
             concurrency: 10
@@ -51,10 +51,9 @@ spring:
           destination: ratings
           concurrency: 10
           group: ratings-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
+          content-type: application/json
           consumer:
             durableSubscription: true
-            headerMode: raw
 ---
 spring:
   profiles: docker
@@ -81,16 +80,14 @@ spring:
         idresses:
           destination: dresses
           group: dresses-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.DressMessageEvent'
+          contentType: application/json
           consumer:
             durableSubscription: true
             concurrency: 20
-            headerMode: raw
         iratings:
           destination: ratings
           group: ratings-group
-          contentType: 'application/x-java-object;type=cristina.tech.fancydress.worker.event.RatingMessageEvent'
+          contentType: application/json
           consumer:
             durableSubscription: true
             concurrency: 20
-            headerMode: raw

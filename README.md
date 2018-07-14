@@ -234,7 +234,7 @@ Unlike dresses, ratings are never updated.
 #### Miscelaneous:
 
 * [Project Lombok](https://projectlombok.org/) has been used to get rid of boiler plate code as getters, setters, no argument constructors in Entity, POJOs, Data Objects.
-* Application health endpoint, non-sensitive: http://localhost:8081/admin/actuator/health
+* Application health endpoint, non-sensitive: http://localhost:8081/admin/health
 * Fancy dress service is using [Flyway](https://flywaydb.org/) to evolve the `dresses` DB schema. Schema version is available using the non-sensitive admin
- endpoint: http://localhost:8081/admin/actuator/flyway or from the psql console
+ endpoint: http://localhost:8081/admin/flyway or from the psql console
 
