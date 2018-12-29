@@ -49,7 +49,7 @@ $ git clone https://github.com/cristinanegrean/spring-cloud-stream-kafka
 $ cd spring-cloud-stream-kafka
 ```
 
-Build and run tests. And the Docker image of the SpringBoot microservice. Note Gradle local installation is not required, as project is shipping the [Gradle Wrapper](https://docs.gradle.org/3.3/userguide/gradle_wrapper.html)
+Build Docker image of the SpringBoot microservice and run tests. Note Gradle local installation is not required, as project is shipping the [Gradle Wrapper](https://docs.gradle.org/3.3/userguide/gradle_wrapper.html)
 
 ```
 $ ./gradlew clean build docker
@@ -70,7 +70,7 @@ to the docker container, as bellow:
 
 ```
 $ docker ps
-$ docker exec -i -t ${CONTAINER ID} bash
+$ docker exec -it ${CONTAINER ID} bash
 ```
 
 #### When no Docker installed, on OS X follow below steps:
