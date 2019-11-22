@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 sudo: required
 language: java
 
@@ -8,7 +8,8 @@ addons:
     token:
       secure: "6r3ebBo7DU9F1pInqogy4crDOWO9pAJHkVBugWTq89gfzaDJT+o/Sut7lwLkPEQqd8dPf/N5mkOKxPaK0cjtyJq55ZFPDeOkWeEnyg6ljlHlcafP4Qt2IjdCgeTcbl+UxIDP1QXQa/g9pnLNn2CynY1AiFqL1VoTDgE6GbIn8byfg7xvJRyyLJHKVSK0Ohs/cwlLy28YjIq09rTp2CP/axZhKoq5UQgkPKiUycULAEzZ2bl/52b4WuKajHelyJ7GzPhlTxTyYpLQPmk2ruuYPg0R0MFZUcFo9G+E2XHzEOftwjiH1zAkhCW0mcCz6BALsZmIo38eK+oQipicO35gHh4p7sd9JQU+0kjltvZSryQYtjXiGzqsC8NRh7LP8eU+HX3OoFeVIUwtyZvAkoZFUjKdjikvLqjVjPF4aC3IO56tgeFcZ1Aaom2g0smJphtA0V62XOW+p+ConIUOjQCfLWB1TxnS3MD9uNJoCIvBqkluMjTseJVbAylRWAN6ZLIuhpPJvSj4HuiL2Zcu/HNn7X/XrQW44VqcvJXTJ43PXN4D/3GH0nQ6WTkOFcfEBOGJmiaHt/rvnn1TKJerqrKvvA9Yp4CUDTZoDpicKk1miB6gSAE6l5E4if7OIPJKCRVELzQJsEhXv6TW46PhLiF6gmeTbNw9G6s6ZczxjZXjF9M="
 
-jdk: oraclejdk8
+jdk:
+  - openjdk:11
 services:
   - docker
 
