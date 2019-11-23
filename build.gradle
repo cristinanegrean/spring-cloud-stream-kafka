@@ -124,6 +124,8 @@ build.dependsOn jacocoTestReport
 
 coveralls {
     jacocoReportPath = "${buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+    saveAsFile = true
+    sendToCoveralls = false
 }
 
 tasks.coveralls {
