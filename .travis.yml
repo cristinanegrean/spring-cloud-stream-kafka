@@ -15,3 +15,6 @@ services:
 
 script:
   - ./gradlew clean build docker coveralls sonarqube
+
+after_success:
+  - curl -F 'json_file=@build/coveralls/report.json' 'https://coveralls.io/api/v1/jobs'
