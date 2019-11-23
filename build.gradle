@@ -11,7 +11,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.4") //Send coverage data to coveralls.io
+        classpath("com.github.kt3k.coveralls:com.github.kt3k.coveralls.gradle.plugin:2.8.4") //Send coverage data to coveralls.io
         classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.20.1') //Build a Docker Image with Gradle
         classpath('org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.8') //Integrate with SonarQube
     }
