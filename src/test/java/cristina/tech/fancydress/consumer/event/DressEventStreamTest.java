@@ -1,19 +1,24 @@
-package cristina.tech.fancydress.worker.event;
+package cristina.tech.fancydress.consumer.event;
 
 import cristina.tech.fancydress.BootifulDressApplication;
+import cristina.tech.fancydress.DressStatus;
 import cristina.tech.fancydress.store.repository.BrandRepository;
 import cristina.tech.fancydress.store.repository.DressRepository;
 import cristina.tech.fancydress.store.service.DressEventStoreService;
 import cristina.tech.fancydress.store.service.RatingEventStoreService;
-import cristina.tech.fancydress.worker.domain.Brand;
-import cristina.tech.fancydress.worker.domain.Dress;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Brand;
+import cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Dress;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.DressMessageEvent;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.RatingMessageEvent;
+
+import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -22,7 +27,6 @@ import static org.mockito.Mockito.*;
 /**
  * Test in isolation {@link DressEventStream} by using Mockito.
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK, classes = BootifulDressApplication.class)
 public class DressEventStreamTest {
 
@@ -60,21 +64,17 @@ public class DressEventStreamTest {
 
     @Test
     public void testReceiveDressMessageEventSuccessfulApply() {
-        DressMessageEvent dressMessageEvent = new DressMessageEvent();
-        dressMessageEvent.setEventType(DressEventType.UPDATED);
-        dressMessageEvent.setPayloadKey("dressy-ten");
-        Dress dress = new Dress();
-        dress.setId("dressy-ten");
-        dress.setName("new-name");
-        Brand brand = new Brand();
-        brand.setName("revamped");
-        dress.setBrand(brand);
-        dressMessageEvent.setPayload(dress);
+        Brand brand = new Brand("revamped");
+        Dress dress = new Dress("dressy-ten", "new-name", brand);
 
-        cristina.tech.fancydress.store.domain.Brand storedBrand = new cristina.tech.fancydress.store.domain.Brand(brand.getName(), null);
-        cristina.tech.fancydress.store.domain.Dress dressToBeUpdated = new cristina.tech.fancydress.store.domain.Dress(dress.getId(), storedBrand);
-        when(dressRepository.findById(dressMessageEvent.getPayloadKey())).thenReturn(Optional.of(dressToBeUpdated));
-        when(brandRepository.findByName(brand.getName())).thenReturn(Optional.of(storedBrand));
+        DressMessageEvent dressMessageEvent = new DressMessageEvent("dressy-ten", DressEventType.UPDATED,
+                Instant.now().toEpochMilli(), dress, DressStatus.UPDATED);
+
+
+        cristina.tech.fancydress.store.domain.Brand storedBrand = new cristina.tech.fancydress.store.domain.Brand(brand.name(), null);
+        cristina.tech.fancydress.store.domain.Dress dressToBeUpdated = new cristina.tech.fancydress.store.domain.Dress(dress.id(), storedBrand);
+        when(dressRepository.findById(dressMessageEvent.payloadKey())).thenReturn(Optional.of(dressToBeUpdated));
+        when(brandRepository.findByName(brand.name())).thenReturn(Optional.of(storedBrand));
         when(dressEventStoreService.apply(dressMessageEvent)).thenReturn(true);
 
         dressEventStream.receiveDressMessageEvent(dressMessageEvent);

@@ -1,4 +1,4 @@
-package cristina.tech.fancydress.worker.event;
+package cristina.tech.fancydress.consumer.event;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.Data;

@@ -6,21 +6,22 @@ import cristina.tech.fancydress.store.domain.Dress;
 import cristina.tech.fancydress.store.domain.Rating;
 import cristina.tech.fancydress.store.repository.DressRepository;
 import cristina.tech.fancydress.store.repository.RatingRepository;
-import cristina.tech.fancydress.worker.event.DressEventType;
-import cristina.tech.fancydress.worker.event.DressInboundChannels;
-import cristina.tech.fancydress.worker.event.DressMessageEvent;
-import cristina.tech.fancydress.worker.event.RatingMessageEvent;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import cristina.tech.fancydress.consumer.event.DressEventType;
+import cristina.tech.fancydress.consumer.event.DressInboundChannels;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.DressMessageEvent;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.RatingMessageEvent;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
@@ -28,15 +29,14 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpMethod.GET;
 
 /**
  * Integration Tests: Streaming, Sink store to persistence layer, browse dresses via REST API.
  */
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = BootifulDressApplication.class)
 public class BootifulDressIntegrationTests {
 
@@ -128,9 +128,9 @@ public class BootifulDressIntegrationTests {
      * @param expectedAverageRating Expected average rating of persisted dress data
      */
     private void browseDressUriCheckContent(String dressId, int expectedAverageRating) {
-        ParameterizedTypeReference<Resource<Dress>> responseType = new ParameterizedTypeReference<Resource<Dress>>() {
+        ParameterizedTypeReference<EntityModel<Dress>> responseType = new ParameterizedTypeReference<EntityModel<Dress>>() {
         };
-        ResponseEntity<Resource<Dress>> dressUriSearch =
+        ResponseEntity<EntityModel<Dress>> dressUriSearch =
                 restTemplate.exchange(UriComponentsBuilder.fromPath("/dresses/" + dressId)
                         .build().toString(), GET, null, responseType);
 
@@ -156,10 +156,10 @@ public class BootifulDressIntegrationTests {
     @Test
     public void dressesRepositoryExposedAsRestResource() {
         // setup API response type to be a Dress HTTP Resource
-        ParameterizedTypeReference<Resource<Dress>> responseType = new ParameterizedTypeReference<Resource<Dress>>() {
+        ParameterizedTypeReference<EntityModel<Dress>> responseType = new ParameterizedTypeReference<EntityModel<Dress>>() {
         };
 
-        ResponseEntity<Resource<Dress>> dressesUri =
+        ResponseEntity<EntityModel<Dress>> dressesUri =
                 restTemplate.exchange(UriComponentsBuilder.fromPath("/dresses")
                         .queryParam("page", "0")
                         .queryParam("size", "25")
@@ -183,10 +183,10 @@ public class BootifulDressIntegrationTests {
     @Test
     public void ratingsRepositoryNotExposedAsRestResource() {
         // setup API response type to be a Rating HTTP Resource
-        ParameterizedTypeReference<Resource<Rating>> responseType = new ParameterizedTypeReference<Resource<Rating>>() {
+        ParameterizedTypeReference<EntityModel<Rating>> responseType = new ParameterizedTypeReference<EntityModel<Rating>>() {
         };
 
-        ResponseEntity<Resource<Rating>> ratingsUri =
+        ResponseEntity<EntityModel<Rating>> ratingsUri =
                 restTemplate.exchange(UriComponentsBuilder.fromPath("/ratings")
                         .queryParam("page", "0")
                         .queryParam("size", "10")
@@ -202,10 +202,10 @@ public class BootifulDressIntegrationTests {
     @Test
     public void brandsRepositoryNotExposedAsRestResource() {
         // setup API response type to be a Rating HTTP Resource
-        ParameterizedTypeReference<Resource<Brand>> responseType = new ParameterizedTypeReference<Resource<Brand>>() {
+        ParameterizedTypeReference<EntityModel<Brand>> responseType = new ParameterizedTypeReference<EntityModel<Brand>>() {
         };
 
-        ResponseEntity<Resource<Brand>> brandsUri =
+        ResponseEntity<EntityModel<Brand>> brandsUri =
                 restTemplate.exchange(UriComponentsBuilder.fromPath("/brands")
                         .queryParam("page", "0")
                         .queryParam("size", "50")
@@ -214,36 +214,18 @@ public class BootifulDressIntegrationTests {
     }
 
     private static DressMessageEvent getDressMessageEvent(String dressId) {
-        DressMessageEvent createDressEvent = new DressMessageEvent();
-        createDressEvent.setStatus(DressStatus.CREATED);
-        createDressEvent.setPayloadKey(dressId);
-        cristina.tech.fancydress.worker.domain.Dress dress = new cristina.tech.fancydress.worker.domain.Dress();
-        cristina.tech.fancydress.worker.domain.Brand brand = new cristina.tech.fancydress.worker.domain.Brand();
-        brand.setName(TEST_BRAND);
-        dress.setId(dressId);
-        dress.setBrand(brand);
-        dress.setSeason(TEST_SEASON);
-        dress.setPrice(TEST_PRICE);
-        dress.setColor(TEST_COLOR);
-        dress.setName(TEST_NAME);
-        createDressEvent.setPayload(dress);
-        createDressEvent.setEventType(DressEventType.CREATED);
-        createDressEvent.setTimestamp(Instant.now().toEpochMilli());
+        cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Brand brand =
+                new cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Brand(null, TEST_BRAND);
+        cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Dress dress =
+                new cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Dress(dressId, TEST_NAME, TEST_COLOR, TEST_SEASON, brand);
 
-        return createDressEvent;
+        return new DressMessageEvent(dressId, DressEventType.CREATED, Instant.now().toEpochMilli(), dress, DressStatus.CREATED);
     }
 
     private static RatingMessageEvent getRatingMessageEvent(String dressId) {
-        RatingMessageEvent dressRatedEvent = new RatingMessageEvent();
-        dressRatedEvent.setPayloadKey(TEST_RATING_ID);
-        cristina.tech.fancydress.worker.domain.Rating rating = new cristina.tech.fancydress.worker.domain.Rating();
-        rating.setDressId(dressId);
-        rating.setRatingId(TEST_RATING_ID);
-        rating.setStars(TEST_RATING_STARS);
-        dressRatedEvent.setPayload(rating);
-        dressRatedEvent.setEventType(DressEventType.RATED);
-        dressRatedEvent.setTimestamp(Instant.now().toEpochMilli());
 
-        return dressRatedEvent;
+        cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Rating rating =
+                new cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Rating(dressId, TEST_RATING_ID, TEST_RATING_STARS);
+        return new RatingMessageEvent(TEST_RATING_ID, DressEventType.RATED, Instant.now().toEpochMilli(), rating);
     }
 }

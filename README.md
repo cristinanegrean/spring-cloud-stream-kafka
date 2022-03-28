@@ -18,6 +18,7 @@ Project code base has been upgraded to [Spring Cloud Finchley.RELEASE](https://g
 
 Demonstrated concepts:
 
+* [JDK14 introduced records](https://docs.oracle.com/en/java/javase/14/language/records.html) 
 * Event Stream Processing
 * Handling out-of-order events
 * REST API to display consumed data, complete with paging and sorting
@@ -28,7 +29,7 @@ Demonstrated concepts:
 ![Technologies Overview](service_overview.png)
 
 ### Technology stack used:
-* Mainstream programming language: [Java](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
+* Mainstream programming language: [Java 17 LTS](https://developer.ibm.com/languages/java/semeru-runtimes/downloads/) for implementing the subscriber/consumer application that receives events for stream processing from Kafka over AMQP protocol, in order to consume the data for dresses and ratings
 * [Apache Kafka](http://kafka.apache.org/): message broker responsible for distributing the events
 * [Spring Cloud Stream](https://cloud.spring.io/spring-cloud-stream/): build message-driven microservices. Spring Cloud Stream provides an opinionated configuration of message brokers (Kafka or RabbitMQ), introducing the concepts of persistent pub/sub semantics, consumer groups and partitions for horizontal scaling.
 * [Spring Integration](https://projects.spring.io/spring-integration/): provide connectivity to message brokers, is used under the hood by Spring Cloud Stream.
@@ -235,7 +236,6 @@ Unlike dresses, ratings are never updated.
 
 #### Miscelaneous:
 
-* [Project Lombok](https://projectlombok.org/) has been used to get rid of boiler plate code as getters, setters, no argument constructors in Entity, POJOs, Data Objects.
 * Application health endpoint, non-sensitive: http://localhost:8081/admin/health
 * Fancy dress service is using [Flyway](https://flywaydb.org/) to evolve the `dresses` DB schema. Schema version is available using the non-sensitive admin
  endpoint: http://localhost:8081/admin/flyway or from the psql console
