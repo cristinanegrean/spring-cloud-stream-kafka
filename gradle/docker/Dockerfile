@@ -1,6 +1,8 @@
 FROM cnegrean/springcloudstream-kafka-consumer-base-image:ibm-semeru-runtimes_jdk-17.0.2.8_openj9-ubuntu-focal
 
-ARG service_name
+ARG JAR_FILE
+
+# COPY ${JAR_FILE} app.jar
 
 COPY dependencies/ ./
 COPY spring-boot-loader/ ./
