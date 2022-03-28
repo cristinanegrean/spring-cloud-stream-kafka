@@ -1,12 +1,17 @@
-package cristina.tech.fancydress.worker.event;
+package cristina.tech.fancydress.consumer.event;
 
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.DressMessageEvent;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.RatingMessageEvent;
 import cristina.tech.fancydress.store.service.DressEventStoreService;
 import cristina.tech.fancydress.store.service.RatingEventStoreService;
-import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.context.annotation.Profile;
+
 
 /**
  * Consuming events. Sink: consumes from a Python script Source {@link /src/main/resources/producer.py}
@@ -17,8 +22,8 @@ import org.springframework.context.annotation.Profile;
  */
 @EnableBinding(DressInboundChannels.class)
 @Profile({"development", "docker", "test"})
-@Slf4j
 public class DressEventStream {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private DressEventStoreService dressEventStoreService;
@@ -30,13 +35,13 @@ public class DressEventStream {
 
     @StreamListener(target = DressInboundChannels.INBOUND_DRESSES)
     public void receiveDressMessageEvent(DressMessageEvent dressMessageEvent) {
-        log.info(LOG_RECEIVED + dressMessageEvent.toString());
+        logger.info(LOG_RECEIVED + dressMessageEvent);
         dressEventStoreService.apply(dressMessageEvent);
     }
 
     @StreamListener(target = DressInboundChannels.INBOUND_RATINGS)
     public void receiveRatingMessageEvent(RatingMessageEvent ratingMessageEvent) {
-        log.info(LOG_RECEIVED + ratingMessageEvent.toString());
+        logger.info(LOG_RECEIVED + ratingMessageEvent);
         ratingEventStoreService.apply(ratingMessageEvent);
     }
 

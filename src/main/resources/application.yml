@@ -5,6 +5,9 @@ spring:
     enabled: true
     validate-on-migrate: false
     baseline-on-migrate: true
+  jackson:
+    default-property-inclusion: non_empty
+    visibility.field: ANY
 server:
     port: 9000
 management:

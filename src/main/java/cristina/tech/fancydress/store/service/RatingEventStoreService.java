@@ -4,7 +4,7 @@ import cristina.tech.fancydress.store.domain.Dress;
 import cristina.tech.fancydress.store.domain.Rating;
 import cristina.tech.fancydress.store.repository.DressRepository;
 import cristina.tech.fancydress.store.repository.RatingRepository;
-import cristina.tech.fancydress.worker.event.RatingMessageEvent;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.RatingMessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,7 @@ public class RatingEventStoreService {
         ratingRepository.save(rating);
 
         // does the associated dress already exist?
-        Optional<Dress> dressOptional = dressRepository.findById(ratingMessageEvent.getPayload().getDressId());
+        Optional<Dress> dressOptional = dressRepository.findById(ratingMessageEvent.payload().dressId());
 
         if (dressOptional.isPresent()) { //yes, update the average stars aggregate field
             Dress dress = dressOptional.get();
@@ -57,14 +57,14 @@ public class RatingEventStoreService {
     }
 
     private Rating fromRatingMessageEvent(RatingMessageEvent ratingMessageEvent) {
-        if (ratingMessageEvent == null || ratingMessageEvent.getPayload() == null) {
+        if (ratingMessageEvent == null || ratingMessageEvent.payload() == null) {
             return null;
         }
 
-        Rating rating = new Rating(ratingMessageEvent.getPayloadKey(), ratingMessageEvent.getPayload().getDressId());
+        Rating rating = new Rating(ratingMessageEvent.payloadKey(), ratingMessageEvent.payload().dressId());
         rating.setEventTime(LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(ratingMessageEvent.getTimestamp()), ZoneId.systemDefault()));
-        rating.setStars(ratingMessageEvent.getPayload().getStars());
+                Instant.ofEpochMilli(ratingMessageEvent.timestamp()), ZoneId.systemDefault()));
+        rating.setStars(ratingMessageEvent.payload().stars());
 
         return rating;
     }

@@ -1,4 +1,4 @@
-package cristina.tech.fancydress.worker.event;
+package cristina.tech.fancydress.consumer.event;
 
 import cristina.tech.fancydress.DressStatus;
 import org.junit.Test;

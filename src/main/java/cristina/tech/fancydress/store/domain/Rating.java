@@ -1,9 +1,6 @@
 package cristina.tech.fancydress.store.domain;
 
 import com.fasterxml.jackson.annotation.JsonTypeId;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,9 +10,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rating")
-@Data
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor(force = true)
 public class Rating extends AbstractEntity {
 
     private static final long serialVersionUID = 74635410771214L;
@@ -47,6 +41,10 @@ public class Rating extends AbstractEntity {
     @NotNull
     private LocalDateTime eventTime;
 
+    public Rating() {
+        // NoArgsConstructor
+    }
+
     public Rating(String ratingId, String dressId) {
         this.uuid = ratingId;
         this.dressId = dressId;
@@ -54,4 +52,43 @@ public class Rating extends AbstractEntity {
         eventTime = LocalDateTime.now();
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public void setDressId(String dressId) {
+        this.dressId = dressId;
+    }
+
+    public void setStars(Integer stars) {
+        this.stars = stars;
+    }
+
+    public void setEventTime(LocalDateTime eventTime) {
+        this.eventTime = eventTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public String getDressId() {
+        return dressId;
+    }
+
+    public Integer getStars() {
+        return stars;
+    }
+
+    public LocalDateTime getEventTime() {
+        return eventTime;
+    }
 }

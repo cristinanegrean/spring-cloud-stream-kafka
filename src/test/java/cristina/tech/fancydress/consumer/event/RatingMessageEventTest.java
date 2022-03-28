@@ -1,4 +1,4 @@
-package cristina.tech.fancydress.worker.event;
+package cristina.tech.fancydress.consumer.event;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

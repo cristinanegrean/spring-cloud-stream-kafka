@@ -1,0 +1,62 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath('com.bmuschko:gradle-docker-plugin:7.2.0')
+        classpath('gradle.plugin.com.patdouble:gradle-aws-ecr-plugin:0.7.0')
+    }
+}
+
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+apply plugin: com.patdouble.gradle.awsecr.AwsecrPlugin
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+
+docker {
+    if (System.env.DOCKER_HOST != null) {
+        url = System.env.DOCKER_HOST
+    }
+
+    if (System.env.DOCKER_CERT_PATH != null) {
+        certPath = file(System.env.DOCKER_CERT_PATH)
+    }
+
+    registryCredentials {
+        url = dockerHubUrl
+    }
+}
+
+def dockerBuildContext = file("$buildDir/docker-build-context")
+def dockerImageShortName = project.hasProperty('dockerImageShortName') ? project.dockerImageShortName : project.path.substring(1).replace(':', '/')
+def dockerImageName = "${awsEcrUrl}/${dockerImageShortName}"
+def serviceName = project.path.split(':')[2]
+
+task prepDockerBuildContext(type: Copy) {
+    from '../../gradle/docker'
+    into dockerBuildContext
+}
+
+task extractLayeredJar(type: JavaExec) {
+    dependsOn bootJar
+    outputs.dir dockerBuildContext
+    systemProperties = ['jarmode': 'layertools']
+    mainClass = '-jar'
+    args = [bootJar.archiveFile.get().asFile.absolutePath, 'extract', '--destination', dockerBuildContext.absolutePath]
+}
+
+task buildDockerImage(type: DockerBuildImage) {
+    dependsOn prepDockerBuildContext, extractLayeredJar
+    inputDir = dockerBuildContext
+    buildArgs = ['service_name' : serviceName]
+    images.add("$dockerImageName:" + applicationVersion())
+    images.add("$dockerImageName:latest")
+}
+
+task pushNewDockerImage(type: DockerPushImage) {
+    dependsOn buildDockerImage
+    images.add(dockerImageName)
+}
+
+

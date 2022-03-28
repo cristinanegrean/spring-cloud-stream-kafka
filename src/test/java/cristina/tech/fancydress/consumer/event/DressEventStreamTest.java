@@ -1,4 +1,4 @@
-package cristina.tech.fancydress.worker.event;
+package cristina.tech.fancydress.consumer.event;
 
 import cristina.tech.fancydress.BootifulDressApplication;
 import cristina.tech.fancydress.store.repository.BrandRepository;

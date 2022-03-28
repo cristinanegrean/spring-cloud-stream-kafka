@@ -6,8 +6,10 @@ import cristina.tech.fancydress.store.domain.Dress;
 import cristina.tech.fancydress.store.repository.BrandRepository;
 import cristina.tech.fancydress.store.repository.DressRepository;
 import cristina.tech.fancydress.store.repository.RatingRepository;
-import cristina.tech.fancydress.worker.event.DressEventType;
-import cristina.tech.fancydress.worker.event.DressMessageEvent;
+import cristina.tech.fancydress.consumer.event.DressEventType;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.DressMessageEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -21,6 +23,8 @@ import java.util.OptionalDouble;
 @Service
 @Transactional
 public class DressEventStoreService {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private DressRepository dressRepository;
@@ -54,29 +58,29 @@ public class DressEventStoreService {
     }
 
     private Dress fromDressMessageEvent(DressMessageEvent dressMessageEvent, boolean isCreate) {
-        if (dressMessageEvent == null || dressMessageEvent.getPayloadKey() == null) {
+        if (dressMessageEvent == null || dressMessageEvent.payloadKey() == null) {
             return null;
         }
 
         // is dress persisted due to a previous CREATE or UPDATE event?
-        Optional<Dress> dressOptional = dressRepository.findById(dressMessageEvent.getPayloadKey());
+        Optional<Dress> dressOptional = dressRepository.findById(dressMessageEvent.payloadKey());
 
         if (isCreate && dressOptional.isPresent()) {
             // handle out-of-order, CREATE message arrived after UPDATED message has already been processed, skip CREATE
             return null;
         }
 
-        Dress dress = dressOptional.orElseGet(() -> new Dress(dressMessageEvent.getPayloadKey(), fromDressMessageEvent(dressMessageEvent.getPayload().getBrand())));
+        Dress dress = dressOptional.orElseGet(() -> new Dress(dressMessageEvent.payloadKey(), fromDressMessageEvent(dressMessageEvent.payload().brand())));
         dress.setStatus(isCreate ? DressStatus.CREATED : DressStatus.UPDATED);
 
-        dress.setName(dressMessageEvent.getPayload().getName());
-        dress.setSeason(dressMessageEvent.getPayload().getSeason());
-        dress.setPrice(dressMessageEvent.getPayload().getPrice());
-        dress.setColor(dressMessageEvent.getPayload().getColor());
+        dress.setName(dressMessageEvent.payload().name());
+        dress.setSeason(dressMessageEvent.payload().season());
+        dress.setPrice(dressMessageEvent.payload().price());
+        dress.setColor(dressMessageEvent.payload().color());
 
         // any image thumbnails?
-        if (dressMessageEvent.getPayload().getImages() != null) {
-            dressMessageEvent.getPayload().getImages().forEach(
+        if (dressMessageEvent.payload().images() != null) {
+            dressMessageEvent.payload().images().forEach(
                     i -> {
                         if (dress.getThumbnails() == null) { // init
                             dress.setThumbnails(new ArrayList<>());
@@ -85,22 +89,22 @@ public class DressEventStoreService {
                             dress.getThumbnails().clear();
                         }
 
-                        dress.getThumbnails().add(i.getThumbUrl());
+                        dress.getThumbnails().add(i.thumbUrl());
                     });
         }
 
         return dress;
     }
 
-    private Brand fromDressMessageEvent(cristina.tech.fancydress.worker.domain.Brand eventBrand) {
+    private Brand fromDressMessageEvent(cristina.tech.fancydress.consumer.domain.ConsumerDomainTypes.Brand eventBrand) {
         if (eventBrand == null) {
             return null;
         }
 
         // does brand already exist?
-        Optional<Brand> brandOptional = brandRepository.findByName(eventBrand.getName());
+        Optional<Brand> brandOptional = brandRepository.findByName(eventBrand.name());
         // found one by unique name
-        return brandOptional.orElseGet(() -> brandRepository.save(new Brand(eventBrand.getName(), eventBrand.getLogoUrl())));
+        return brandOptional.orElseGet(() -> brandRepository.save(new Brand(eventBrand.name(), eventBrand.logoUrl())));
     }
 
     /**
