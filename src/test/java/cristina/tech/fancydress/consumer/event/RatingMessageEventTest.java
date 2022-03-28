@@ -1,12 +1,13 @@
 package cristina.tech.fancydress.consumer.event;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import cristina.tech.fancydress.consumer.event.ConsumerEventTypes.RatingMessageEvent;
+
+import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.JsonTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p>
  * {@link org.springframework.test.context.junit4.SpringRunner} tells JUnit to run using Spring’s testing support. SpringRunner is the new name for SpringJUnit4ClassRunner
  */
-@RunWith(SpringRunner.class)
 @JsonTest
 @ActiveProfiles("test")
 public class RatingMessageEventTest {
@@ -34,12 +34,12 @@ public class RatingMessageEventTest {
         RatingMessageEvent ratingMessageEvent = json.readObject("dress_rated.json");
 
         assertThat(ratingMessageEvent).isNotNull();
-        assertThat(ratingMessageEvent.getPayloadKey()).isEqualTo("c29b98c2-00fb-4766-938e-9e511d5f5c55");
-        assertThat(ratingMessageEvent.getEventType()).isEqualTo(DressEventType.RATED);
-        assertThat(ratingMessageEvent.getPayload()).isNotNull();
-        assertThat(ratingMessageEvent.getPayload().getRatingId()).isEqualTo(ratingMessageEvent.getPayloadKey());
-        assertThat(ratingMessageEvent.getPayload().getDressId()).isEqualTo("NM521C00M-Q11");
-        assertThat(ratingMessageEvent.getPayload().getStars()).isEqualTo(1);
+        assertThat(ratingMessageEvent.payloadKey()).isEqualTo("c29b98c2-00fb-4766-938e-9e511d5f5c55");
+        assertThat(ratingMessageEvent.eventType()).isEqualTo(DressEventType.RATED);
+        assertThat(ratingMessageEvent.payload()).isNotNull();
+        assertThat(ratingMessageEvent.payload().ratingId()).isEqualTo(ratingMessageEvent.payloadKey());
+        assertThat(ratingMessageEvent.payload().dressId()).isEqualTo("NM521C00M-Q11");
+        assertThat(ratingMessageEvent.payload().stars()).isEqualTo(1);
     }
 
 }

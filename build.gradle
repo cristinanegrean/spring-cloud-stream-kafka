@@ -13,7 +13,10 @@ plugins {
     id 'com.github.kt3k.coveralls' version "2.12.0"
 
     id "io.spring.dependency-management" version "1.0.11.RELEASE"
-    id "org.springframework.boot" version "2.6.4"
+    id "org.springframework.boot" version "2.6.5"
+
+    id "com.bmuschko.docker-spring-boot-application" version "7.3.0"
+    id "com.bmuschko.docker-remote-api" version "6.7.0"
 }
 
 apply plugin: 'java'
@@ -23,6 +26,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'org.sonarqube'
+apply plugin: 'com.bmuschko.docker-spring-boot-application'
 
 group = 'cnegrean'
 
@@ -46,6 +50,8 @@ repositories {
 ext {
     springCloudVersion = '2021.0.1'
 
+    registryUrl='registry.hub.docker.com'
+
     dockerHubUrl = 'registry.hub.docker.com/cnegrean/springcloudstream-kafka-consumer-base-image'
 
     dockerImageShortName = 'spring-cloud-stream-kafka'
@@ -63,6 +69,9 @@ dependencies {
     //Exposing Spring Data repositories over REST via spring-data-rest-webmvc
     implementation('org.springframework.boot:spring-boot-starter-data-rest')
 
+    // Hypermedia as the Engine of Application State (HATEOAS)
+    implementation('org.springframework.boot:spring-boot-starter-hateoas')
+
     //Instruct Jackson JSON serializer/deserializer to work with Java 8 Date & Time API
     implementation('com.fasterxml.jackson.datatype:jackson-datatype-jsr310')
 
@@ -70,7 +79,7 @@ dependencies {
     testImplementation('org.springframework.cloud:spring-cloud-stream-test-support')
 
     //Browsing Spring Data REST repositories in your browser
-    //runtimeOnly('org.springframework.data:spring-data-rest-hal-browser')
+    runtimeOnly('org.springframework.data:spring-data-rest-hal-browser:3.3.9.RELEASE')
 
     //PostgreSQL jdbc driver
     runtimeOnly('org.postgresql:postgresql')
@@ -134,11 +143,3 @@ coveralls {
 tasks.coveralls {
     onlyIf { System.env.'CI' }
 }
-
-//docker {
-//    name "${project.group}/${springBoot.properties.get("artifact")}"
-//    files "${project.buildDir}/libs"
-//    buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
-//}
-//
-//docker.dependsOn build

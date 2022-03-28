@@ -4,12 +4,10 @@ buildscript {
     }
     dependencies {
         classpath('com.bmuschko:gradle-docker-plugin:7.2.0')
-        classpath('gradle.plugin.com.patdouble:gradle-aws-ecr-plugin:0.7.0')
     }
 }
 
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
-apply plugin: com.patdouble.gradle.awsecr.AwsecrPlugin
 
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
@@ -49,7 +47,7 @@ task extractLayeredJar(type: JavaExec) {
 task buildDockerImage(type: DockerBuildImage) {
     dependsOn prepDockerBuildContext, extractLayeredJar
     inputDir = dockerBuildContext
-    buildArgs = ['service_name' : serviceName]
+    buildArgs = ['service_name' : "spring-cloud-stream-kafka"]
     images.add("$dockerImageName:" + applicationVersion())
     images.add("$dockerImageName:latest")
 }

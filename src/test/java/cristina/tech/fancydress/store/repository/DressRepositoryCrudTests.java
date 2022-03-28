@@ -3,12 +3,11 @@ package cristina.tech.fancydress.store.repository;
 import cristina.tech.fancydress.store.domain.Brand;
 import cristina.tech.fancydress.store.domain.Dress;
 import cristina.tech.fancydress.store.domain.Rating;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -17,9 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@RunWith(SpringRunner.class)
 @DataJpaTest
 public class DressRepositoryCrudTests {
 
